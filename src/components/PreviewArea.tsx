@@ -41,7 +41,8 @@ Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 - A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
 - A ordem dos recheios é: base até 100% de altura com a ganache.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://cococher.com/cdn/shop/files/Cococher_Cinnamon_Churro_open.jpg?v=1717892376&width=800)`;
+- Para referência de tamanho e formato, utilize a imagem a seguir (https://cococher.com/cdn/shop/files/Cococher_Cinnamon_Churro_open.jpg?v=1717892376&width=800)
+- Deixe a foto bem realista, com o recheio escorrendo`;
     } else {
       return `Gere uma imagem de:
 
@@ -51,7 +52,8 @@ Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selectio
 - A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
 - A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://cococher.com/cdn/shop/files/Cococher_Cinnamon_Churro_open.jpg?v=1717892376&width=800)`;
+- Para referência de tamanho e formato, utilize a imagem a seguir (https://cococher.com/cdn/shop/files/Cococher_Cinnamon_Churro_open.jpg?v=1717892376&width=800)
+- Deixe a foto bem realista, com o recheio escorrendo`;
     }
   };
 
