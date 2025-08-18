@@ -21,13 +21,17 @@ const useAuth = (): AuthContextType => {
   useEffect(() => {
     const checkUserRole = async (userId: string) => {
       try {
-        const { data: roles } = await supabase
+        console.log('Checking user role for userId:', userId);
+        const { data: roles, error } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', userId)
           .eq('role', 'admin');
         
-        setIsAdmin(roles && roles.length > 0);
+        console.log('User roles query result:', { roles, error });
+        const isUserAdmin = roles && roles.length > 0;
+        console.log('Setting isAdmin to:', isUserAdmin);
+        setIsAdmin(isUserAdmin);
       } catch (error) {
         console.error('Error checking user role:', error);
         setIsAdmin(false);
