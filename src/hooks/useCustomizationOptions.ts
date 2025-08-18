@@ -30,6 +30,8 @@ const useCustomizationOptions = () => {
           supabase.from('opcoes_cor').select('id, nome, codigo_hex').eq('ativo', true),
         ]);
 
+        console.log('Fetched options:', { chocolates, bases, ganaches, geleias, cores });
+
         setOptions({
           chocolates: chocolates.data || [],
           bases: bases.data || [],
@@ -37,6 +39,12 @@ const useCustomizationOptions = () => {
           geleias: geleias.data || [],
           cores: cores.data || [],
         });
+
+        if (chocolates.error) console.error('Chocolates error:', chocolates.error);
+        if (bases.error) console.error('Bases error:', bases.error);
+        if (ganaches.error) console.error('Ganaches error:', ganaches.error);
+        if (geleias.error) console.error('Geleias error:', geleias.error);
+        if (cores.error) console.error('Cores error:', cores.error);
       } catch (error) {
         console.error('Error fetching options:', error);
       } finally {
