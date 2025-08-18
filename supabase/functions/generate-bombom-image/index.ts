@@ -78,35 +78,20 @@ serve(async (req) => {
 
     console.log("Translated prompt:", englishPrompt)
 
-    // Call Google Gemini Image Generation API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:generateImage?key=${GOOGLE_API_KEY}`, {
+    // Call Google Gemini generateContent API for image generation
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${GOOGLE_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: englishPrompt,
-        config: {
-          aspectRatio: "1:1",
-          seed: Math.floor(Math.random() * 1000000),
-          safetySettings: [
-            {
-              category: "HARM_CATEGORY_HATE_SPEECH",
-              threshold: "BLOCK_ONLY_HIGH"
-            },
-            {
-              category: "HARM_CATEGORY_DANGEROUS_CONTENT", 
-              threshold: "BLOCK_ONLY_HIGH"
-            },
-            {
-              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-              threshold: "BLOCK_ONLY_HIGH"
-            },
-            {
-              category: "HARM_CATEGORY_HARASSMENT",
-              threshold: "BLOCK_ONLY_HIGH"
-            }
-          ]
+        contents: [{
+          parts: [{
+            text: englishPrompt
+          }]
+        }],
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
         }
       })
     })
@@ -120,11 +105,23 @@ serve(async (req) => {
     const data = await response.json()
     console.log("Gemini response:", data)
     
-    if (!data.generatedImages || data.generatedImages.length === 0) {
-      throw new Error('No image generated')
+    // Find the image part in the response
+    let imageBase64 = null
+    if (data.candidates && data.candidates.length > 0) {
+      const candidate = data.candidates[0]
+      if (candidate.content && candidate.content.parts) {
+        for (const part of candidate.content.parts) {
+          if (part.inlineData && part.inlineData.data) {
+            imageBase64 = part.inlineData.data
+            break
+          }
+        }
+      }
     }
-
-    const imageBase64 = data.generatedImages[0].bytesBase64Encoded
+    
+    if (!imageBase64) {
+      throw new Error('No image generated in response')
+    }
     
     return new Response(
       JSON.stringify({ 
