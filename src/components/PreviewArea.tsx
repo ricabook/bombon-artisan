@@ -37,7 +37,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
 
 Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 
-- A Casquinha é fina e pintada por completo e uniformemente de ${selection.cor.nome}, até a base do bombom.
+- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
 - A ordem dos recheios é: base até 100% de altura com a ganache. O bombom deve ter apenas 1 camada de recheio.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
 - Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
@@ -47,7 +47,7 @@ Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 
 Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selection.geleia?.nome}.
 
-- A Casquinha é fina e pintada por completo e uniformemente de ${selection.cor.nome}, até a base do bombom.
+- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
 - A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia. O bombom deve ter apenas 2 camadas de recheio.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
 - Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
