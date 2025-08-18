@@ -12,9 +12,9 @@ serve(async (req) => {
   }
 
   try {
-    const STABILITY_API_KEY = Deno.env.get('STABILITY_API_KEY')
-    if (!STABILITY_API_KEY) {
-      throw new Error('STABILITY_API_KEY is not set')
+    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
+    if (!GOOGLE_API_KEY) {
+      throw new Error('GOOGLE_API_KEY is not set')
     }
 
     const { prompt } = await req.json()
@@ -78,42 +78,53 @@ serve(async (req) => {
 
     console.log("Translated prompt:", englishPrompt)
 
-    // Call Stability AI API
-    const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
+    // Call Google Gemini Image Generation API
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:generateImage?key=${GOOGLE_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${STABILITY_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text_prompts: [
-          {
-            text: englishPrompt,
-            weight: 1
-          }
-        ],
-        cfg_scale: 7,
-        height: 1024,
-        width: 1024,
-        steps: 30,
-        samples: 1,
-        style_preset: "photographic"
+        prompt: englishPrompt,
+        config: {
+          aspectRatio: "1:1",
+          seed: Math.floor(Math.random() * 1000000),
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT", 
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_ONLY_HIGH"
+            },
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_ONLY_HIGH"
+            }
+          ]
+        }
       })
     })
 
     if (!response.ok) {
       const errorData = await response.text()
-      console.error('Stability AI error:', errorData)
-      throw new Error(`Stability AI API error: ${response.status} - ${errorData}`)
+      console.error('Google Gemini error:', errorData)
+      throw new Error(`Google Gemini API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
+    console.log("Gemini response:", data)
     
-    if (!data.artifacts || data.artifacts.length === 0) {
+    if (!data.generatedImages || data.generatedImages.length === 0) {
       throw new Error('No image generated')
     }
 
-    const imageBase64 = data.artifacts[0].base64
+    const imageBase64 = data.generatedImages[0].bytesBase64Encoded
     
     return new Response(
       JSON.stringify({ 
