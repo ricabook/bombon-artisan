@@ -14,16 +14,255 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bombons: {
+        Row: {
+          base_id: string | null
+          chocolate_id: string | null
+          cor_id: string | null
+          created_at: string
+          ganache_id: string | null
+          geleia_id: string | null
+          id: string
+          prompt_gerado: string | null
+          status: string | null
+          updated_at: string
+          url_imagem: string | null
+          user_id: string
+        }
+        Insert: {
+          base_id?: string | null
+          chocolate_id?: string | null
+          cor_id?: string | null
+          created_at?: string
+          ganache_id?: string | null
+          geleia_id?: string | null
+          id?: string
+          prompt_gerado?: string | null
+          status?: string | null
+          updated_at?: string
+          url_imagem?: string | null
+          user_id: string
+        }
+        Update: {
+          base_id?: string | null
+          chocolate_id?: string | null
+          cor_id?: string | null
+          created_at?: string
+          ganache_id?: string | null
+          geleia_id?: string | null
+          id?: string
+          prompt_gerado?: string | null
+          status?: string | null
+          updated_at?: string
+          url_imagem?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bombons_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "opcoes_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bombons_chocolate_id_fkey"
+            columns: ["chocolate_id"]
+            isOneToOne: false
+            referencedRelation: "opcoes_chocolate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bombons_cor_id_fkey"
+            columns: ["cor_id"]
+            isOneToOne: false
+            referencedRelation: "opcoes_cor"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bombons_ganache_id_fkey"
+            columns: ["ganache_id"]
+            isOneToOne: false
+            referencedRelation: "opcoes_ganache"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bombons_geleia_id_fkey"
+            columns: ["geleia_id"]
+            isOneToOne: false
+            referencedRelation: "opcoes_geleia"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opcoes_base: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      opcoes_chocolate: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      opcoes_cor: {
+        Row: {
+          ativo: boolean | null
+          codigo_hex: string | null
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          codigo_hex?: string | null
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean | null
+          codigo_hex?: string | null
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      opcoes_ganache: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      opcoes_geleia: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          telefone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          telefone: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          telefone?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +389,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
