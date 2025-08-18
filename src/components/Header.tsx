@@ -8,6 +8,7 @@ const Header = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const { user, isAdmin, signOut } = useAuth();
+  console.log('Header - user:', user?.id, 'isAdmin:', isAdmin);
   const { toast } = useToast();
 
   const handleOpenAuth = (mode: "login" | "register") => {
@@ -24,17 +25,17 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-card border-b border-border px-6 py-3">
+    <header className="bg-card border-b border-border px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Novo logotipo responsivo centralizado */}
-        <div className="flex items-center">
-          <img 
-            src="/logo.png" 
-            alt="La Vie" 
-            className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain"
-          />
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-gradient-chocolate rounded-lg flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-lg">🍫</span>
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Chocolateria
+          </h1>
         </div>
-
+        
         <div className="flex items-center space-x-3">
           {user && (
             <>
