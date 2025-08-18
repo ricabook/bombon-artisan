@@ -26,30 +26,36 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
   const { toast } = useToast();
 
   const generatePrompt = () => {
-    if (!selection.chocolate || !selection.base || !selection.ganache || !selection.cor) {
+    if (!selection.chocolate || !selection.ganache || !selection.cor) {
       return "";
     }
 
-    // Estrutura interna baseada na presença de geleia
+    // Verifica se há geleia selecionada (e se não é "Sem Geleia")
     const hasGeleia = selection.geleia && selection.geleia.nome !== "Sem Geleia";
     
-    let prompt = `Foto realista, bombom artesanal de ${selection.chocolate.nome}, pintado de ${selection.cor.nome}. O bombom está cortado ao meio, mostrando a seção interna, que está dividida da seguinte forma, de baixo para cima:
-- ${selection.base.nome} - Até 10% de altura`;
-    
-    if (hasGeleia) {
-      prompt += `
-- ${selection.ganache.nome} - Da base até 80% de altura
-- ${selection.geleia?.nome} - Ocupa os 20% restantes do topo`;
+    if (!hasGeleia) {
+      // Prompt para bombom sem geleia
+      return `Gere uma imagem de:
+
+Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
+
+- A Casquinha é pintada por completo e uniformemente de ${selection.cor.nome}.
+- A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
+- A ordem dos recheios é: base até 100% de altura com a ganache.
+- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
+- Formato da imagem é igual ao do URL: https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg`;
     } else {
-      prompt += `
-- ${selection.ganache.nome} - Da base até 90% de altura`;
+      // Prompt para bombom com geleia
+      return `Gere uma imagem de:
+
+Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selection.geleia?.nome}.
+
+- A Casquinha é pintada por completo e uniformemente de ${selection.cor.nome}.
+- A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
+- A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia.
+- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
+- Formato e tamanho do bombom é igual ao do URL: https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg`;
     }
-    
-    prompt += `
-Cenário neutro, iluminação de estúdio, aspecto profissional (produto)
-Sem letras, sem logos, sem objetos extras.`;
-    
-    return prompt;
   };
 
   const handleSendToProduction = async () => {
