@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
-    if (!GOOGLE_API_KEY) {
-      throw new Error('GOOGLE_API_KEY is not set')
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+    if (!OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not set')
     }
 
     const { prompt } = await req.json()
@@ -78,50 +79,37 @@ serve(async (req) => {
 
     console.log("Translated prompt:", englishPrompt)
 
-    // Call Google Gemini generateContent API for image generation
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${GOOGLE_API_KEY}`, {
+    // Call OpenAI API for image generation
+    const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: englishPrompt
-          }]
-        }],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"]
-        }
+        model: 'dall-e-3',
+        prompt: englishPrompt,
+        n: 1,
+        size: '1024x1024',
+        quality: 'standard',
+        response_format: 'b64_json'
       })
     })
 
     if (!response.ok) {
       const errorData = await response.text()
-      console.error('Google Gemini error:', errorData)
-      throw new Error(`Google Gemini API error: ${response.status} - ${errorData}`)
+      console.error('OpenAI error:', errorData)
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
-    console.log("Gemini response:", data)
+    console.log("OpenAI response received")
     
-    // Find the image part in the response
-    let imageBase64 = null
-    if (data.candidates && data.candidates.length > 0) {
-      const candidate = data.candidates[0]
-      if (candidate.content && candidate.content.parts) {
-        for (const part of candidate.content.parts) {
-          if (part.inlineData && part.inlineData.data) {
-            imageBase64 = part.inlineData.data
-            break
-          }
-        }
-      }
-    }
-    
-    if (!imageBase64) {
+    if (!data.data || data.data.length === 0 || !data.data[0].b64_json) {
       throw new Error('No image generated in response')
     }
+    
+    const imageBase64 = data.data[0].b64_json
     
     return new Response(
       JSON.stringify({ 
