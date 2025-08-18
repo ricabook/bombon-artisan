@@ -20,6 +20,8 @@ interface PreviewAreaProps {
 const PreviewArea = ({ selection }: PreviewAreaProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string>("");
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -28,14 +30,19 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
       return "";
     }
 
-    let prompt = `Gerar a imagem de um bombom de ${selection.chocolate.nome} com ${selection.base.nome}, recheio formado por ${selection.ganache.nome}`;
+    // Estrutura interna baseada na presença de geleia
+    const hasGeleia = selection.geleia && selection.geleia.nome !== "Sem Geleia";
+    const estruturaInterna = hasGeleia 
+      ? `10% ${selection.base.nome}, 70% ${selection.ganache.nome}, 20% ${selection.geleia?.nome}`
+      : `10% ${selection.base.nome}, 90% ${selection.ganache.nome}`;
+
+    let prompt = `A detailed, photorealistic image of a bonbon made of ${selection.chocolate.nome} with ${selection.base.nome} base, filled with ${selection.ganache.nome}`;
     
-    if (selection.geleia && selection.geleia.nome !== "Sem Geleia") {
-      prompt += ` e ${selection.geleia.nome}`;
+    if (hasGeleia) {
+      prompt += ` and ${selection.geleia?.nome}`;
     }
     
-    prompt += `. Casquinha externa pintada de ${selection.cor.nome}.`;
-    prompt += ` O bombom deve ser fotorrealista, com o chocolate escolhido visível no interior. A pintura colorida deve estar apenas na casquinha externa.`;
+    prompt += `. The external shell is painted in ${selection.cor.nome} color. The bonbon should show the chosen chocolate type with only the external shell painted in the chosen color. Internal structure from bottom to top: ${estruturaInterna}. Studio lighting, professional food photography, high resolution, neutral background, no text, no logos, no extra objects.`;
     
     return prompt;
   };
@@ -64,7 +71,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     try {
       const prompt = generatePrompt();
       
-      const { error } = await supabase
+        const { error } = await supabase
         .from('bombons')
         .insert({
           user_id: user.id,
@@ -74,6 +81,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
           geleia_id: selection.geleia?.id || null,
           cor_id: selection.cor.id,
           prompt_gerado: prompt,
+          url_imagem: generatedImageUrl || null,
           status: 'enviado'
         });
 
@@ -111,22 +119,32 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     
     try {
       const prompt = generatePrompt();
-      
-      // TODO: Integrar com API de IA para gerar imagem
       console.log("Prompt para geração de imagem:", prompt);
       
-      // Simular processamento por enquanto
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Imagem gerada!",
-        description: "A imagem do seu bombom foi gerada com sucesso.",
+      const { data, error } = await supabase.functions.invoke('generate-bombom-image', {
+        body: { prompt }
       });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.success && data?.imageUrl) {
+        setGeneratedImageUrl(data.imageUrl);
+        setImageBase64(data.imageBase64);
+        toast({
+          title: "Imagem gerada!",
+          description: "A imagem do seu bombom foi gerada com sucesso.",
+        });
+      } else {
+        throw new Error(data?.error || "Falha ao gerar imagem");
+      }
+      
     } catch (error) {
       console.error("Error generating image:", error);
       toast({
         title: "Erro",
-        description: "Ocorreu um erro ao gerar a imagem. Tente novamente.",
+        description: error.message || "Ocorreu um erro ao gerar a imagem. Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -142,11 +160,19 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
           <CardTitle>Preview do Bombom</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-gradient-to-br from-background to-muted rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-border">
-            <div className="text-center text-muted-foreground">
-              <div className="text-6xl mb-2">🍫</div>
-              <p>Sua criação aparecerá aqui</p>
-            </div>
+          <div className="bg-gradient-to-br from-background to-muted rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-border overflow-hidden">
+            {generatedImageUrl ? (
+              <img 
+                src={generatedImageUrl} 
+                alt="Bombom gerado" 
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : (
+              <div className="text-center text-muted-foreground">
+                <div className="text-6xl mb-2">🍫</div>
+                <p>Sua criação aparecerá aqui</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -194,7 +220,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
               size="lg"
               variant="outline"
               onClick={handleSendToProduction}
-              disabled={isGenerating || !user}
+              disabled={isGenerating || !user || !generatedImageUrl}
             >
               {isGenerating ? "Enviando..." : "Enviar para Produção"}
             </Button>
