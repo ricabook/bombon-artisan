@@ -19,6 +19,7 @@ interface PreviewAreaProps {
 
 const PreviewArea = ({ selection }: PreviewAreaProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -96,6 +97,43 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     }
   };
 
+  const handleGenerateImage = async () => {
+    if (!selection.chocolate || !selection.base || !selection.ganache || !selection.cor) {
+      toast({
+        title: "Seleção incompleta",
+        description: "Por favor, complete todas as seleções antes de gerar a imagem.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    
+    try {
+      const prompt = generatePrompt();
+      
+      // TODO: Integrar com API de IA para gerar imagem
+      console.log("Prompt para geração de imagem:", prompt);
+      
+      // Simular processamento por enquanto
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Imagem gerada!",
+        description: "A imagem do seu bombom foi gerada com sucesso.",
+      });
+    } catch (error) {
+      console.error("Error generating image:", error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro ao gerar a imagem. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Área de Preview da Imagem */}
@@ -140,14 +178,27 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
             </div>
           </div>
           
-          <Button 
-            className="w-full mt-4" 
-            size="lg"
-            onClick={handleSendToProduction}
-            disabled={isGenerating || !user}
-          >
-            {isGenerating ? "Enviando..." : "Enviar para Produção"}
-          </Button>
+          <div className="space-y-3 mt-4">
+            <Button 
+              className="w-full" 
+              size="lg"
+              variant="default"
+              onClick={handleGenerateImage}
+              disabled={isGeneratingImage || !selection.chocolate || !selection.base || !selection.ganache || !selection.cor}
+            >
+              {isGeneratingImage ? "Gerando..." : "Gerar Imagem do Bombom"}
+            </Button>
+            
+            <Button 
+              className="w-full" 
+              size="lg"
+              variant="outline"
+              onClick={handleSendToProduction}
+              disabled={isGenerating || !user}
+            >
+              {isGenerating ? "Enviando..." : "Enviar para Produção"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
