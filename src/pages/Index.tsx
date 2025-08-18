@@ -13,6 +13,8 @@ interface Selection {
 const Index = () => {
   const [selection, setSelection] = useState<Selection>({});
 
+  console.log("Index component rendered, selection:", selection);
+
   return (
     <div className="min-h-screen bg-background">
       <main className="max-w-7xl mx-auto px-6 py-8">
