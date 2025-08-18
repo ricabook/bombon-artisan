@@ -19,6 +19,21 @@ const useAuth = (): AuthContextType => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    const checkUserRole = async (userId: string) => {
+      try {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .eq('role', 'admin');
+        
+        setIsAdmin(roles && roles.length > 0);
+      } catch (error) {
+        console.error('Error checking user role:', error);
+        setIsAdmin(false);
+      }
+    };
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -27,14 +42,8 @@ const useAuth = (): AuthContextType => {
         
         if (session?.user) {
           // Check if user is admin
-          setTimeout(async () => {
-            const { data: roles } = await supabase
-              .from('user_roles')
-              .select('role')
-              .eq('user_id', session.user.id)
-              .eq('role', 'admin');
-            
-            setIsAdmin(roles && roles.length > 0);
+          setTimeout(() => {
+            checkUserRole(session.user.id);
           }, 0);
         } else {
           setIsAdmin(false);
@@ -48,6 +57,11 @@ const useAuth = (): AuthContextType => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        checkUserRole(session.user.id);
+      }
+      
       setLoading(false);
     });
 
