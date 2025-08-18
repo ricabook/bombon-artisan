@@ -10,10 +10,15 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 
 const authSchema = z.object({
-  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  telefone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
+  nome: z.string().optional(),
+  telefone: z.string().optional(),
   email: z.string().email("Email inválido"),
   senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+});
+
+const registerSchema = authSchema.extend({
+  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  telefone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
 });
 
 type AuthFormData = z.infer<typeof authSchema>;
@@ -30,7 +35,7 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   const { signUp, signIn } = useAuth();
 
   const form = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(mode === "register" ? registerSchema : authSchema),
     defaultValues: {
       nome: "",
       telefone: "",
@@ -44,7 +49,7 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
     try {
       let result;
       if (mode === "register") {
-        result = await signUp(data.nome, data.telefone, data.email, data.senha);
+        result = await signUp(data.nome || "", data.telefone || "", data.email, data.senha);
       } else {
         result = await signIn(data.email, data.senha);
       }
@@ -93,15 +98,36 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {!isLogin && (
+              <FormField
+                control={form.control}
+                name="nome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Digite seu nome" 
+                        {...field} 
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
-              name="nome"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Digite seu nome" 
+                      type="email"
+                      placeholder="Digite seu email" 
                       {...field} 
                       disabled={isLoading}
                     />
@@ -110,48 +136,6 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
                 </FormItem>
               )}
             />
-
-            {!isLogin && (
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email"
-                        placeholder="Digite seu email" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {isLogin && (
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email"
-                        placeholder="Digite seu email" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
 
             {!isLogin && (
               <FormField
