@@ -13,10 +13,15 @@ serve(async (req) => {
   }
 
   try {
+    console.log("Edge function called with method:", req.method)
+    
     const FAL_API_KEY = Deno.env.get('FAL_API_KEY')
     if (!FAL_API_KEY) {
+      console.error('FAL_API_KEY is not set in environment')
       throw new Error('FAL_API_KEY is not set')
     }
+    
+    console.log("FAL_API_KEY found, length:", FAL_API_KEY.length)
 
     const { prompt } = await req.json()
     
@@ -116,11 +121,32 @@ serve(async (req) => {
     }
     
     const imageUrl = data.images[0].url
+    console.log("Image URL received:", imageUrl)
     
     // Download the image and convert to base64
+    console.log("Downloading image from URL...")
     const imageResponse = await fetch(imageUrl)
+    console.log("Image download response status:", imageResponse.status)
+    
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to download image: ${imageResponse.status}`)
+    }
+    
     const imageBuffer = await imageResponse.arrayBuffer()
-    const imageBase64 = btoa(String.fromCharCode(...new Uint8Array(imageBuffer)))
+    console.log("Image buffer size:", imageBuffer.byteLength)
+    
+    // Convert to base64 using a more reliable method for Deno
+    const uint8Array = new Uint8Array(imageBuffer)
+    const chunks = []
+    const chunkSize = 0x8000 // 32KB chunks
+    
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.subarray(i, Math.min(i + chunkSize, uint8Array.length))
+      chunks.push(String.fromCharCode.apply(null, Array.from(chunk)))
+    }
+    
+    const imageBase64 = btoa(chunks.join(''))
+    console.log("Base64 conversion completed, length:", imageBase64.length)
     
     return new Response(
       JSON.stringify({ 
