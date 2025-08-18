@@ -182,6 +182,21 @@ Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selectio
               </div>
             )}
           </div>
+
+          {/* Texto informativo abaixo da imagem */}
+          <p className="text-xs text-muted-foreground text-center mt-3">
+            A imagem acima é gerada através de <strong>Inteligência Artificial</strong>. 
+            É apenas um esboço de como será seu bombom. 
+            Se tiver qualquer dúvida, fale conosco pelo WhatsApp:{" "}
+            <a 
+              href="https://wa.me/5519996594881" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              (19) 9-9659-4881
+            </a>.
+          </p>
         </CardContent>
       </Card>
 
