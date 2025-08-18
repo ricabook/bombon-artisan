@@ -38,7 +38,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
 Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 
 - A Casquinha é fina e pintada por completo e uniformemente de ${selection.cor.nome}, até a base do bombom.
-- A ordem dos recheios é: base até 100% de altura com a ganache.
+- A ordem dos recheios é: base até 100% de altura com a ganache. O bombom deve ter apenas 1 camada de recheio.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
 - Para referência de tamanho e formato, utilize a imagem a seguir (https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg)
 - Deixe a foto bem realista, com as ganaches tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
@@ -48,7 +48,7 @@ Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selection.geleia?.nome}.
 
 - A Casquinha é fina e pintada por completo e uniformemente de ${selection.cor.nome}, até a base do bombom.
-- A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia.
+- A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia. O bombom deve ter apenas 2 camadas de recheio.
 - Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
 - Para referência de tamanho e formato, utilize a imagem a seguir (https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg)
 - Deixe a foto bem realista, com as ganaches e geleias tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
