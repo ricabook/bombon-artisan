@@ -42,8 +42,7 @@ Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
 - A Casquinha é pintada por completo e uniformemente de ${selection.cor.nome}.
 - A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
 - A ordem dos recheios é: base até 100% de altura com a ganache.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Formato da imagem é igual ao do URL: https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg`;
+- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.`;
     } else {
       // Prompt para bombom com geleia
       return `Gere uma imagem de:
@@ -53,8 +52,7 @@ Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selectio
 - A Casquinha é pintada por completo e uniformemente de ${selection.cor.nome}.
 - A cor é mostrada somente no exterior do bombom, não alterando a cor do chocolate ${selection.chocolate.nome}
 - A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Formato e tamanho do bombom é igual ao do URL: https://www.shutterstock.com/image-photo/chocolate-bonbon-luxury-handmade-bonbons-260nw-1854146767.jpg`;
+- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.`;
     }
   };
 
