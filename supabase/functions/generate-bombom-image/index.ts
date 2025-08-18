@@ -13,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
-    if (!OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is not set')
+    const FAL_API_KEY = Deno.env.get('FAL_API_KEY')
+    if (!FAL_API_KEY) {
+      throw new Error('FAL_API_KEY is not set')
     }
 
     const { prompt } = await req.json()
@@ -78,45 +78,49 @@ serve(async (req) => {
 
     console.log("Translated prompt:", englishPrompt)
 
-    // Call OpenAI API for image generation
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
+    // Call fal.ai API for image generation
+    const response = await fetch('https://fal.run/fal-ai/flux/schnell', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Key ${FAL_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'dall-e-3',
         prompt: englishPrompt,
-        n: 1,
-        size: '1024x1024',
-        quality: 'standard',
-        response_format: 'b64_json'
+        image_size: "square_hd",
+        num_inference_steps: 4,
+        num_images: 1,
+        enable_safety_checker: true
       })
     })
 
-    console.log("OpenAI response status:", response.status)
+    console.log("fal.ai response status:", response.status)
     
     if (!response.ok) {
       const errorData = await response.text()
-      console.error('OpenAI error details:', errorData)
-      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
+      console.error('fal.ai error details:', errorData)
+      throw new Error(`fal.ai API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
-    console.log("OpenAI response received, data keys:", Object.keys(data))
+    console.log("fal.ai response received, data keys:", Object.keys(data))
     
-    if (!data.data || data.data.length === 0) {
-      console.error('No data array in response:', data)
-      throw new Error('No image data returned from OpenAI')
+    if (!data.images || data.images.length === 0) {
+      console.error('No images array in response:', data)
+      throw new Error('No image data returned from fal.ai')
     }
     
-    if (!data.data[0].b64_json) {
-      console.error('No b64_json in first data item:', data.data[0])
-      throw new Error('No base64 image data in response')
+    if (!data.images[0].url) {
+      console.error('No URL in first image item:', data.images[0])
+      throw new Error('No image URL in response')
     }
     
-    const imageBase64 = data.data[0].b64_json
+    const imageUrl = data.images[0].url
+    
+    // Download the image and convert to base64
+    const imageResponse = await fetch(imageUrl)
+    const imageBuffer = await imageResponse.arrayBuffer()
+    const imageBase64 = btoa(String.fromCharCode(...new Uint8Array(imageBuffer)))
     
     return new Response(
       JSON.stringify({ 
