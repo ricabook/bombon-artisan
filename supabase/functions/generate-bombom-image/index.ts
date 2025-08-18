@@ -95,17 +95,25 @@ serve(async (req) => {
       })
     })
 
+    console.log("OpenAI response status:", response.status)
+    
     if (!response.ok) {
       const errorData = await response.text()
-      console.error('OpenAI error:', errorData)
+      console.error('OpenAI error details:', errorData)
       throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
-    console.log("OpenAI response received")
+    console.log("OpenAI response received, data keys:", Object.keys(data))
     
-    if (!data.data || data.data.length === 0 || !data.data[0].b64_json) {
-      throw new Error('No image generated in response')
+    if (!data.data || data.data.length === 0) {
+      console.error('No data array in response:', data)
+      throw new Error('No image data returned from OpenAI')
+    }
+    
+    if (!data.data[0].b64_json) {
+      console.error('No b64_json in first data item:', data.data[0])
+      throw new Error('No base64 image data in response')
     }
     
     const imageBase64 = data.data[0].b64_json
