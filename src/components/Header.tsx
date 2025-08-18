@@ -29,7 +29,7 @@ const Header = () => {
         {/* Novo logotipo responsivo centralizado */}
         <div className="flex items-center">
           <img 
-            src="/Background La Vie (9).png" 
+            src="/logo.png" 
             alt="La Vie" 
             className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain"
           />
