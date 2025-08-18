@@ -32,9 +32,11 @@ const useAuth = (): AuthContextType => {
         const isUserAdmin = roles && roles.length > 0;
         console.log('Setting isAdmin to:', isUserAdmin);
         setIsAdmin(isUserAdmin);
+        setLoading(false); // Only set loading to false after role check
       } catch (error) {
         console.error('Error checking user role:', error);
         setIsAdmin(false);
+        setLoading(false);
       }
     };
 
@@ -45,15 +47,15 @@ const useAuth = (): AuthContextType => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Check if user is admin
+          // Keep loading true until role check completes
+          setLoading(true);
           setTimeout(() => {
             checkUserRole(session.user.id);
           }, 0);
         } else {
           setIsAdmin(false);
+          setLoading(false);
         }
-        
-        setLoading(false);
       }
     );
 
@@ -63,10 +65,11 @@ const useAuth = (): AuthContextType => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        setLoading(true); // Keep loading until role check
         checkUserRole(session.user.id);
+      } else {
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
