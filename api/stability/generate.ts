@@ -1,0 +1,1 @@
+<conteúdo corrigido do generate.ts em ESM compatível>
