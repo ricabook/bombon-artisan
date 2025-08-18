@@ -32,17 +32,22 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
 
     // Estrutura interna baseada na presença de geleia
     const hasGeleia = selection.geleia && selection.geleia.nome !== "Sem Geleia";
-    const estruturaInterna = hasGeleia 
-      ? `10% ${selection.base.nome}, 70% ${selection.ganache.nome}, 20% ${selection.geleia?.nome}`
-      : `10% ${selection.base.nome}, 90% ${selection.ganache.nome}`;
-
-    let prompt = `A detailed, photorealistic image of a bonbon made of ${selection.chocolate.nome} with ${selection.base.nome} base, filled with ${selection.ganache.nome}`;
+    
+    let prompt = `Foto realista, bombom artesanal de ${selection.chocolate.nome}, pintado de ${selection.cor.nome}. O bombom está cortado ao meio, mostrando a seção interna, que está dividida da seguinte forma, de baixo para cima:
+- ${selection.base.nome} - Até 10% de altura`;
     
     if (hasGeleia) {
-      prompt += ` and ${selection.geleia?.nome}`;
+      prompt += `
+- ${selection.ganache.nome} - Da base até 80% de altura
+- ${selection.geleia?.nome} - Ocupa os 20% restantes do topo`;
+    } else {
+      prompt += `
+- ${selection.ganache.nome} - Da base até 90% de altura`;
     }
     
-    prompt += `. The external shell is painted in ${selection.cor.nome} color. The bonbon should show the chosen chocolate type with only the external shell painted in the chosen color. Internal structure from bottom to top: ${estruturaInterna}. Studio lighting, professional food photography, high resolution, neutral background, no text, no logos, no extra objects.`;
+    prompt += `
+Cenário neutro, iluminação de estúdio, aspecto profissional (produto)
+Sem letras, sem logos, sem objetos extras.`;
     
     return prompt;
   };
