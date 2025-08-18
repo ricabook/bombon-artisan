@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+import useAuth from "@/hooks/useAuth";
 
 const authSchema = z.object({
   nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   telefone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
+  email: z.string().email("Email inválido"),
   senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
@@ -23,12 +26,15 @@ interface AuthDialogProps {
 
 const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { signUp, signIn } = useAuth();
 
   const form = useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
     defaultValues: {
       nome: "",
       telefone: "",
+      email: "",
       senha: "",
     },
   });
@@ -36,13 +42,33 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   const onSubmit = async (data: AuthFormData) => {
     setIsLoading(true);
     try {
-      // TODO: Implementar lógica de autenticação
-      console.log("Auth data:", data, "Mode:", mode);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simular loading
-      onOpenChange(false);
-      form.reset();
+      let result;
+      if (mode === "register") {
+        result = await signUp(data.nome, data.telefone, data.email, data.senha);
+      } else {
+        result = await signIn(data.email, data.senha);
+      }
+
+      if (result.error) {
+        toast({
+          title: "Erro",
+          description: result.error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Sucesso",
+          description: mode === "register" ? "Conta criada com sucesso!" : "Login realizado com sucesso!",
+        });
+        onOpenChange(false);
+        form.reset();
+      }
     } catch (error) {
-      console.error("Auth error:", error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -85,23 +111,67 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="telefone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Telefone</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="(11) 99999-9999" 
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!isLogin && (
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="email"
+                        placeholder="Digite seu email" 
+                        {...field} 
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {isLogin && (
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="email"
+                        placeholder="Digite seu email" 
+                        {...field} 
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {!isLogin && (
+              <FormField
+                control={form.control}
+                name="telefone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Telefone</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="(11) 99999-9999" 
+                        {...field} 
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
