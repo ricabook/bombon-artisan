@@ -31,6 +31,53 @@ serve(async (req) => {
 
     console.log("Generating image with prompt:", prompt)
 
+    // Translate Portuguese terms to English
+    const translations = {
+      'Chocolate ao Leite': 'Milk Chocolate',
+      'Chocolate Meio Amargo': 'Semi Sweet Chocolate',
+      'Chocolate Branco': 'White Chocolate',
+      'Chocolate 70% Cacau': '70% Cocoa Chocolate',
+      'Biscoito Triturado': 'Crushed Cookies',
+      'Castanha Triturada': 'Crushed Nuts',
+      'Coco Ralado': 'Shredded Coconut',
+      'Sem Base': 'No Base',
+      'Ganache de Chocolate': 'Chocolate Ganache',
+      'Ganache de Caramelo': 'Caramel Ganache',
+      'Ganache de Frutas Vermelhas': 'Red Berries Ganache',
+      'Ganache de Maracujá': 'Passion Fruit Ganache',
+      'Ganache de Café': 'Coffee Ganache',
+      'Geleia de Morango': 'Strawberry Jam',
+      'Geleia de Framboesa': 'Raspberry Jam',
+      'Geleia de Maracujá': 'Passion Fruit Jam',
+      'Geleia de Damasco': 'Apricot Jam',
+      'Sem Geleia': 'No Jam',
+      'Rosa': 'Pink',
+      'Azul': 'Blue',
+      'Verde': 'Green',
+      'Amarelo': 'Yellow',
+      'Roxo': 'Purple',
+      'Laranja': 'Orange',
+      'Vermelho': 'Red',
+      'Branco': 'White',
+      'Foto realista, bombom artesanal': 'Photorealistic artisanal bonbon',
+      'pintado de': 'painted in',
+      'O bombom está cortado ao meio, mostrando a seção interna': 'The bonbon is cut in half, showing the internal cross-section',
+      'que está dividida da seguinte forma, de baixo para cima': 'which is divided as follows, from bottom to top',
+      'Até 10% de altura': 'Up to 10% height',
+      'Da base até 80% de altura': 'From base to 80% height',
+      'Da base até 90% de altura': 'From base to 90% height',
+      'Ocupa os 20% restantes do topo': 'Occupies the remaining 20% at the top',
+      'Cenário neutro, iluminação de estúdio, aspecto profissional (produto)': 'Neutral background, studio lighting, professional product photography',
+      'Sem letras, sem logos, sem objetos extras': 'No text, no logos, no extra objects'
+    }
+
+    let englishPrompt = prompt
+    Object.entries(translations).forEach(([portuguese, english]) => {
+      englishPrompt = englishPrompt.replace(new RegExp(portuguese, 'g'), english)
+    })
+
+    console.log("Translated prompt:", englishPrompt)
+
     // Call Stability AI API
     const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
       method: 'POST',
@@ -41,7 +88,7 @@ serve(async (req) => {
       body: JSON.stringify({
         text_prompts: [
           {
-            text: prompt,
+            text: englishPrompt,
             weight: 1
           }
         ],
