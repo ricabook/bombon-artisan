@@ -171,7 +171,7 @@ const PromptManager = () => {
           <div>
             <Label htmlFor="base-prompt">Prompt Base</Label>
             <div className="text-xs text-muted-foreground mb-2">
-              Use as variáveis: {'{tipoChocolate}'}, {'{pintura}'}, {'{estrutura}'}
+              Use as variáveis: {'{tipoChocolate}'}, {'{corCasquinha}'}, {'{base}'}, {'{ganache}'}, {'{geleia}'}
             </div>
             <Textarea
               id="base-prompt"
