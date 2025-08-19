@@ -12,8 +12,7 @@ interface Bombon {
   prompt_gerado: string;
   status: string;
   created_at: string;
-  nome: string;
-  telefone: string;
+  user_id: string;
   opcoes_chocolate: { nome: string };
   opcoes_base: { nome: string };
   opcoes_ganache: { nome: string };
@@ -37,8 +36,7 @@ const AdminDashboard = () => {
           prompt_gerado,
           status,
           created_at,
-          nome,
-          telefone,
+          user_id,
           opcoes_chocolate (nome),
           opcoes_base (nome),
           opcoes_ganache (nome),
