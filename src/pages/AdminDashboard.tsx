@@ -26,6 +26,8 @@ const AdminDashboard = () => {
   const [bombons, setBombons] = useState<Bombon[]>([]);
   const [profilesMap, setProfilesMap] = useState<Record<string, ProfileRow>>({});
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
@@ -33,8 +35,8 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
       setLoading(true);
+      setErrorMsg(null);
 
-      // 1) Busca pedidos
       const { data, error } = await supabase
         .from("bombons")
         .select(
@@ -64,7 +66,6 @@ const AdminDashboard = () => {
       const pedidos = (data || []) as Bombon[];
       setBombons(pedidos);
 
-      // 2) Busca perfis para todos os user_id
       const userIds = Array.from(
         new Set(pedidos.map((b) => b.user_id).filter((v) => !!v))
       );
@@ -94,6 +95,20 @@ const AdminDashboard = () => {
     };
 
     fetchData();
+
+    // Opcional: realtime
+    const channel = supabase
+      .channel("admin-bombons")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "bombons" },
+        () => fetchData()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, isAdmin]);
 
   const updateStatus = async (bombon_id: string, new_status: string) => {
@@ -108,6 +123,30 @@ const AdminDashboard = () => {
       setBombons((prev) =>
         prev.map((b) => (b.id === bombon_id ? { ...b, status: new_status } : b))
       );
+    }
+  };
+
+  // EXCLUSÃO via RPC delete_bombon (Opção B)
+  const handleDelete = async (id: string) => {
+    const ok = window.confirm(
+      "Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita."
+    );
+    if (!ok) return;
+
+    setDeletingId(id);
+    setErrorMsg(null);
+
+    const prev = bombons;
+    setBombons((cur) => cur.filter((b) => b.id !== id)); // UI otimista
+
+    const { error } = await supabase.rpc("delete_bombon", { p_id: id });
+
+    setDeletingId(null);
+
+    if (error) {
+      console.error("Erro ao excluir:", error);
+      setErrorMsg(`Não foi possível excluir: ${error.message}`);
+      setBombons(prev); // rollback
     }
   };
 
@@ -176,6 +215,12 @@ const AdminDashboard = () => {
         <TabsContent value="pedidos" className="space-y-4">
           <h2 className="text-2xl font-semibold">Pedidos dos Usuários</h2>
 
+          {errorMsg && (
+            <div className="text-sm text-red-600 border border-red-300 bg-red-50 rounded-md p-3">
+              {errorMsg}
+            </div>
+          )}
+
           {bombons.length === 0 ? (
             <Card>
               <CardContent className="p-6 text-center">
@@ -194,31 +239,44 @@ const AdminDashboard = () => {
                 return (
                   <Card key={bombon.id}>
                     <CardHeader>
-                      <div className="flex justify-between items-start">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                         <div>
                           <CardTitle className="text-lg">
                             Bombom de {bombon.opcoes_chocolate?.nome}
                           </CardTitle>
 
-                          {/* Nome e telefone do usuário */}
                           <p className="text-sm text-muted-foreground">
                             <span className="font-medium">Cliente:</span>{" "}
                             {profile?.nome || "—"}{" "}
                             {profile?.telefone ? `— ${profile.telefone}` : ""}
                           </p>
 
-                          {/* ID do usuário (auditoria) */}
                           {bombon.user_id && (
                             <p className="text-xs text-muted-foreground">
                               Cliente ID: {bombon.user_id}
                             </p>
                           )}
                         </div>
-                        <Badge className={getStatusColor(bombon.status)}>
-                          {getStatusText(bombon.status)}
-                        </Badge>
+
+                        <div className="flex items-center gap-2">
+                          <Badge className={getStatusColor(bombon.status)}>
+                            {getStatusText(bombon.status)}
+                          </Badge>
+
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDelete(bombon.id)}
+                            disabled={deletingId === bombon.id}
+                            title="Excluir pedido"
+                            aria-label={`Excluir pedido ${bombon.id}`}
+                          >
+                            {deletingId === bombon.id ? "Excluindo…" : "Excluir"}
+                          </Button>
+                        </div>
                       </div>
                     </CardHeader>
+
                     <CardContent>
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -244,7 +302,7 @@ const AdminDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           {bombon.status === "enviado" && (
                             <Button
                               size="sm"
