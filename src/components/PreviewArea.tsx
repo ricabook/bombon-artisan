@@ -174,8 +174,8 @@ Foto hiper-realista, em estúdio profissional, de bombons artesanais de ${select
 
           {/* Texto informativo abaixo da imagem */}
           <p className="text-xs text-muted-foreground text-center mt-3">
-            A imagem acima é gerada através de <strong>Inteligência Artificial</strong>. 
-            É apenas um esboço de como será seu bombom. As cores podem apresentar diferenças nos bombons.
+            A imagem acima é um esboço e foi gerada através de <strong>Inteligência Artificial</strong>. 
+            O bombom final pode apresentar diferenças nas cores e texturas dos recheios.
             Se tiver qualquer dúvida, fale conosco pelo WhatsApp:{" "}
             <a 
               href="https://wa.me/5519996594881" 
