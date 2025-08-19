@@ -34,14 +34,14 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     
     if (!hasGeleia) {
       return `Gerar uma foto hiper-realista, em estúdio profissional, de bombons artesanais de ${selection.chocolate.nome}, formato arredondado e brilhante. A casquinha externa está pintada de forma uniforme e completa de ${selection.cor.nome} absoluto. 
-Um dos bombons está cortado ao meio, exibindo o interior com uma camada: da base ao topo, ocupando 100% da altura do bombom, uma única camada uniforme cremosa de ${selection.ganache.nome}. 
+Um dos bombons está cortado ao meio, exibindo o interior com uma camada: da base ao topo, ocupando 100% da altura do bombom, uma única camada uniforme, lisa e cremosa de ${selection.ganache.nome}. 
 Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura detalhada do chocolate e do recheio. Estilo fotográfico realista, como se fosse capturado com uma câmera Canon em estúdio de fotografia gastronômica. Sem textos ou objetos adicionais na cena, apenas os bombons centralizados.`;      
 
     } else {
       return `Gerar uma foto hiper-realista, em estúdio profissional, de bombons artesanais de ${selection.chocolate.nome}, formato arredondado e brilhante. A casquinha externa está pintada de forma uniforme e completa de ${selection.cor.nome} absoluto. 
 Um dos bombons está cortado ao meio, exibindo o interior com duas camadas: 
-- Da base até 80% da altura do bombom: uma única camada uniforme cremosa de ${selection.ganache.nome}. 
-- No topo, correspondente aos 20% restantes do bombom: uma camada brilhante de ${selection.geleia.nome}.
+- Da base até 80% da altura do bombom: uma única camada uniforme, lise e cremosa de ${selection.ganache.nome}. 
+- No topo, correspondente aos 20% restantes do bombom: uma camada brilhante e suculenta de ${selection.geleia.nome}.
 Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura detalhada do chocolate e do recheio. Estilo fotográfico realista, como se fosse capturado com uma câmera Canon em estúdio de fotografia gastronômica. Sem textos ou objetos adicionais na cena, apenas os bombons centralizados.`;
     }
   };
