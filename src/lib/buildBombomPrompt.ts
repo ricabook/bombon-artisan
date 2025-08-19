@@ -11,7 +11,7 @@ function normalizar(str?: string) {
   return (str || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim();
 }
 
-export function buildBombomPrompt(o: BombomOpcao) {
+export function buildBombomPrompt(o: BombomOpcao, customPromptConfig?: { base_prompt: string; negative_prompt: string }) {
   const geleiaNorm = normalizar(o.geleia);
   // aceita "Sem geléia" / "Sem geleia" / variações
   const temGeleia = !!o.geleia && geleiaNorm !== 'sem geleia' && geleiaNorm !== 'sem geleia';
@@ -26,6 +26,17 @@ export function buildBombomPrompt(o: BombomOpcao) {
     ? `- 10% (${o.base}); - 70% (${o.ganache}); - 20% (${o.geleia});`
     : `- 10% (${o.base}); - 90% (${o.ganache});`;
 
+  if (customPromptConfig) {
+    // Usar prompt customizado
+    const basePrompt = customPromptConfig.base_prompt
+      .replace('{tipoChocolate}', o.tipoChocolate)
+      .replace('{pintura}', pintura)
+      .replace('{estrutura}', estrutura);
+
+    return { prompt: basePrompt, negativePrompt: customPromptConfig.negative_prompt };
+  }
+
+  // Prompt padrão (fallback)
   const basePrompt =
     `Foto de produto hiper-realista, bombom artesanal de ${o.tipoChocolate}, ${pintura}. ` +
     `O bombom está cortado ao meio, mostrando claramente a seção interna. ` +

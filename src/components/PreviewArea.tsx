@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import useAuth from "@/hooks/useAuth";
+import { buildBombomPrompt, BombomOpcao } from "@/lib/buildBombomPrompt";
+import { usePromptConfig } from "@/hooks/usePromptConfig";
 
 interface Selection {
   chocolate?: { id: string; nome: string };
@@ -24,35 +26,23 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
   const [imageBase64, setImageBase64] = useState<string>("");
   const { user } = useAuth();
   const { toast } = useToast();
+  const { promptConfig } = usePromptConfig();
 
   const generatePrompt = () => {
-    if (!selection.chocolate || !selection.ganache || !selection.cor) {
+    if (!selection.chocolate || !selection.ganache || !selection.cor || !selection.base) {
       return "";
     }
 
-    const hasGeleia = selection.geleia && selection.geleia.nome !== "Sem Geleia";
-    
-    if (!hasGeleia) {
-      return `Gere uma imagem de:
+    const opcao: BombomOpcao = {
+      corCasquinha: selection.cor.nome,
+      tipoChocolate: selection.chocolate.nome,
+      base: selection.base.nome,
+      ganache: selection.ganache.nome,
+      geleia: selection.geleia?.nome
+    };
 
-Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
-
-- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
-- A ordem dos recheios é: base até 100% de altura com a ganache. O bombom deve ter apenas 1 camada de recheio.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
-- Deixe a foto bem realista, com as ganaches tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
-    } else {
-      return `Gere uma imagem de:
-
-Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selection.geleia?.nome}.
-
-- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
-- A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia. O bombom deve ter apenas 2 camadas de recheio.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
-- Deixe a foto bem realista, com as ganaches e geleias tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
-    }
+    const resultado = buildBombomPrompt(opcao, promptConfig || undefined);
+    return resultado.prompt;
   };
 
   const handleSendToProduction = async () => {
@@ -90,6 +80,7 @@ Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selectio
           cor_id: selection.cor.id,
           prompt_gerado: prompt,
           url_imagem: generatedImageUrl || null,
+          url_imagem_base64: imageBase64 || null,
           status: 'enviado'
         });
 

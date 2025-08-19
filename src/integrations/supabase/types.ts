@@ -27,6 +27,7 @@ export type Database = {
           status: string | null
           updated_at: string
           url_imagem: string | null
+          url_imagem_base64: string | null
           user_id: string
         }
         Insert: {
@@ -41,6 +42,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           url_imagem?: string | null
+          url_imagem_base64?: string | null
           user_id: string
         }
         Update: {
@@ -55,6 +57,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           url_imagem?: string | null
+          url_imagem_base64?: string | null
           user_id?: string
         }
         Relationships: [
@@ -242,6 +245,30 @@ export type Database = {
           telefone?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      prompt_configs: {
+        Row: {
+          base_prompt: string
+          created_at: string
+          id: string
+          negative_prompt: string
+          updated_at: string
+        }
+        Insert: {
+          base_prompt?: string
+          created_at?: string
+          id?: string
+          negative_prompt?: string
+          updated_at?: string
+        }
+        Update: {
+          base_prompt?: string
+          created_at?: string
+          id?: string
+          negative_prompt?: string
+          updated_at?: string
         }
         Relationships: []
       }

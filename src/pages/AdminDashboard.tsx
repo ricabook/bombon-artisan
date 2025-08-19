@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import useAuth from "@/hooks/useAuth";
 import OptionsManager from "@/components/OptionsManager";
+import PromptManager from "@/components/PromptManager";
 
 interface Bombon {
   id: string;
@@ -13,6 +14,7 @@ interface Bombon {
   status: string;
   created_at: string;
   user_id: string;
+  url_imagem_base64: string | null;
   opcoes_chocolate: { nome: string };
   opcoes_base: { nome: string };
   opcoes_ganache: { nome: string };
@@ -37,6 +39,7 @@ const AdminDashboard = () => {
           status,
           created_at,
           user_id,
+          url_imagem_base64,
           opcoes_chocolate (nome),
           opcoes_base (nome),
           opcoes_ganache (nome),
@@ -123,6 +126,7 @@ const AdminDashboard = () => {
         <TabsList>
           <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
           <TabsTrigger value="gerenciar">Gerenciar Bombons</TabsTrigger>
+          <TabsTrigger value="prompt">Prompt</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pedidos" className="space-y-4">
@@ -176,6 +180,20 @@ const AdminDashboard = () => {
                           {bombon.opcoes_cor?.nome}
                         </div>
                       </div>
+
+                      {/* Imagem gerada pelo usuário */}
+                      {bombon.url_imagem_base64 && (
+                        <div>
+                          <strong className="text-sm">Imagem gerada:</strong>
+                          <div className="mt-2">
+                            <img 
+                              src={bombon.url_imagem_base64} 
+                              alt="Bombom gerado pelo usuário" 
+                              className="w-32 h-32 object-cover rounded-lg border border-border"
+                            />
+                          </div>
+                        </div>
+                      )}
                       
                       <div className="flex gap-2">
                         {bombon.status === 'enviado' && (
@@ -214,6 +232,17 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <OptionsManager />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="prompt">
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuração de Prompts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PromptManager />
             </CardContent>
           </Card>
         </TabsContent>
