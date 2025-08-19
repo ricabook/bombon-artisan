@@ -34,7 +34,7 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     
     if (!hasGeleia) {
       return `Gerar uma foto hiper-realista, em estúdio profissional, de bombons artesanais de ${selection.chocolate.nome}, formato arredondado e brilhante. A casquinha externa está pintada de forma uniforme e completa de ${selection.cor.nome} absoluto. 
-Um dos bombons está cortado ao meio, exibindo o interior com apenas uma camada: da base ao topo, ocupando 100% da altura do bombom, uma única camada uniforme cremosa de ${selection.ganache.nome}. 
+Um dos bombons está cortado ao meio, exibindo o interior com uma camada: da base ao topo, ocupando 100% da altura do bombom, uma única camada uniforme cremosa de ${selection.ganache.nome}. 
 Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura detalhada do chocolate e do recheio. Estilo fotográfico realista, como se fosse capturado com uma câmera Canon em estúdio de fotografia gastronômica. Sem textos ou objetos adicionais na cena, apenas os bombons centralizados.`;      
 
     } else {
