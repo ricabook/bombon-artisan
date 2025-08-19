@@ -173,7 +173,7 @@ Foto hiper-realista, em estúdio profissional, de bombons artesanais de ${select
           </div>
 
           {/* Texto informativo abaixo da imagem */}
-          <p className="text-s text-muted-foreground text-center mt-3">
+          <p className="text-xs text-muted-foreground text-center mt-3">
             A imagem acima é um esboço e foi gerada através de <strong>Inteligência Artificial</strong>. 
             O bombom final pode apresentar diferenças nas cores e texturas dos recheios.
             Se tiver qualquer dúvida, fale conosco pelo WhatsApp:{" "}
