@@ -35,23 +35,12 @@ const PreviewArea = ({ selection }: PreviewAreaProps) => {
     if (!hasGeleia) {
       return `Gere uma imagem de:
 
-Bombom de ${selection.chocolate.nome}, com ${selection.ganache.nome}.
+Foto hiper-realista, em estúdio profissional, de bombons artesanais de ${selection.chocolate.nome}, formato arredondado e brilhante. A casquinha externa está decorada com pintura completa na cor ${selection.cor.nome}. Um dos bombons está cortado ao meio, exibindo o interior com uma camada bem definida: da base ao topo, uma camada cremosa de ${selection.ganache.nome}. Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura detalhada do chocolate e do recheio. Estilo fotográfico realista, como se fosse capturado com uma câmera Canon em estúdio de fotografia gastronômica. Sem objetos adicionais na cena, apenas os bombons centralizados.`;      
 
-- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
-- A ordem dos recheios é: base até 100% de altura com a ganache. O bombom deve ter apenas 1 camada de recheio.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
-- Deixe a foto bem realista, com as ganaches tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
     } else {
       return `Gere uma imagem de:
 
-Bombom de ${selection.chocolate.nome} com ${selection.ganache.nome} e ${selection.geleia?.nome}.
-
-- A Casquinha é fina e pintada de ${selection.cor.nome}. A pintura deve preencher a parte externa inteira do bombom, de forma uniforme e sem manchas.
-- A ordem dos recheios é: base até 70% de altura com a ganache e nos 30% do topo a geléia. O bombom deve ter apenas 2 camadas de recheio.
-- Uma mesa branca embaixo e nenhum outro objeto adicional na foto gerada.
-- Para referência de tamanho e formato, utilize a imagem a seguir (https://st3.depositphotos.com/2951763/19164/i/1600/depositphotos_191648202-stock-photo-cut-luxury-handmade-bonbons-with.jpg)
-- Deixe a foto bem realista, com as ganaches e geleias tendo as cores correspondentes a cor de suas frutas e com aspecto bem uniforme, sem deformações`;
+Foto hiper-realista, em estúdio profissional, de bombons artesanais de ${selection.chocolate.nome}, formato arredondado e brilhante. A casquinha externa está decorada com pintura completa na cor ${selection.cor.nome}. Um dos bombons está cortado ao meio, exibindo o interior com duas camadas bem definidas: na base uma camada cremosa de ${selection.ganache.nome}; no topo, uma camada de ${selection.geleia.nome}. Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura detalhada do chocolate e do recheio. Estilo fotográfico realista, como se fosse capturado com uma câmera Canon em estúdio de fotografia gastronômica. Sem objetos adicionais na cena, apenas os bombons centralizados.`;
     }
   };
 
