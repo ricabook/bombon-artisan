@@ -32,7 +32,7 @@ const Header = () => {
   <img 
     src="/logo.png" 
     alt="La Vie - Página inicial" 
-    className="h-10"
+    className="h-16"
   />
 </Link>
 
