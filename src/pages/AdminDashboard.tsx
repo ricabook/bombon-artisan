@@ -20,18 +20,25 @@ interface Bombon {
   opcoes_cor: { nome: string; codigo_hex: string };
 }
 
+type ProfileRow = { user_id: string; nome: string; telefone: string };
+
 const AdminDashboard = () => {
   const [bombons, setBombons] = useState<Bombon[]>([]);
+  const [profilesMap, setProfilesMap] = useState<Record<string, ProfileRow>>({});
   const [loading, setLoading] = useState(true);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
     if (!user || !isAdmin) return;
 
-    const fetchBombons = async () => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      // 1) Busca pedidos
       const { data, error } = await supabase
-        .from('bombons')
-        .select(`
+        .from("bombons")
+        .select(
+          `
           id,
           prompt_gerado,
           status,
@@ -42,52 +49,91 @@ const AdminDashboard = () => {
           opcoes_ganache (nome),
           opcoes_geleia (nome),
           opcoes_cor (nome, codigo_hex)
-        `)
-        .order('created_at', { ascending: false });
+        `
+        )
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Error fetching bombons:', error);
-      } else {
-        setBombons(data || []);
+        console.error("Error fetching bombons:", error);
+        setBombons([]);
+        setProfilesMap({});
+        setLoading(false);
+        return;
       }
+
+      const pedidos = (data || []) as Bombon[];
+      setBombons(pedidos);
+
+      // 2) Busca perfis para todos os user_id
+      const userIds = Array.from(
+        new Set(pedidos.map((b) => b.user_id).filter((v) => !!v))
+      );
+
+      if (userIds.length === 0) {
+        setProfilesMap({});
+        setLoading(false);
+        return;
+      }
+
+      const { data: profiles, error: profErr } = await supabase
+        .from("profiles")
+        .select("user_id, nome, telefone")
+        .in("user_id", userIds);
+
+      if (profErr) {
+        console.error("Error fetching profiles:", profErr);
+        setProfilesMap({});
+      } else {
+        const map = Object.fromEntries(
+          (profiles || []).map((p: ProfileRow) => [p.user_id, p])
+        );
+        setProfilesMap(map);
+      }
+
       setLoading(false);
     };
 
-    fetchBombons();
+    fetchData();
   }, [user, isAdmin]);
 
   const updateStatus = async (bombon_id: string, new_status: string) => {
     const { error } = await supabase
-      .from('bombons')
+      .from("bombons")
       .update({ status: new_status })
-      .eq('id', bombon_id);
+      .eq("id", bombon_id);
 
     if (error) {
-      console.error('Error updating status:', error);
+      console.error("Error updating status:", error);
     } else {
-      setBombons(prev => 
-        prev.map(b => 
-          b.id === bombon_id ? { ...b, status: new_status } : b
-        )
+      setBombons((prev) =>
+        prev.map((b) => (b.id === bombon_id ? { ...b, status: new_status } : b))
       );
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'enviado': return 'bg-blue-500';
-      case 'em_producao': return 'bg-yellow-500';
-      case 'finalizado': return 'bg-green-500';
-      default: return 'bg-gray-500';
+      case "enviado":
+        return "bg-blue-500";
+      case "em_producao":
+        return "bg-yellow-500";
+      case "finalizado":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'enviado': return 'Enviado';
-      case 'em_producao': return 'Em Produção';
-      case 'finalizado': return 'Finalizado';
-      default: return status;
+      case "enviado":
+        return "Enviado";
+      case "em_producao":
+        return "Em Produção";
+      case "finalizado":
+        return "Finalizado";
+      default:
+        return status;
     }
   };
 
@@ -96,7 +142,9 @@ const AdminDashboard = () => {
       <div className="container mx-auto p-6">
         <Card>
           <CardContent className="p-6 text-center">
-            <p className="text-destructive">Acesso negado. Você não tem permissão de administrador.</p>
+            <p className="text-destructive">
+              Acesso negado. Você não tem permissão de administrador.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -118,7 +166,7 @@ const AdminDashboard = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Painel do Administrador</h1>
-      
+
       <Tabs defaultValue="pedidos" className="space-y-4">
         <TabsList>
           <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
@@ -127,7 +175,7 @@ const AdminDashboard = () => {
 
         <TabsContent value="pedidos" className="space-y-4">
           <h2 className="text-2xl font-semibold">Pedidos dos Usuários</h2>
-          
+
           {bombons.length === 0 ? (
             <Card>
               <CardContent className="p-6 text-center">
@@ -138,71 +186,92 @@ const AdminDashboard = () => {
             </Card>
           ) : (
             <div className="space-y-4">
-              {bombons.map((bombon) => (
-                <Card key={bombon.id}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">
-                          Bombom de {bombon.opcoes_chocolate?.nome}
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground">
-                          Cliente ID: {bombon.user_id}
-                        </p>
-                      </div>
-                      <Badge className={getStatusColor(bombon.status)}>
-                        {getStatusText(bombon.status)}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              {bombons.map((bombon) => {
+                const profile = bombon.user_id
+                  ? profilesMap[bombon.user_id]
+                  : null;
+
+                return (
+                  <Card key={bombon.id}>
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
                         <div>
-                          <strong>Base:</strong> {bombon.opcoes_base?.nome}
+                          <CardTitle className="text-lg">
+                            Bombom de {bombon.opcoes_chocolate?.nome}
+                          </CardTitle>
+
+                          {/* Nome e telefone do usuário */}
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium">Cliente:</span>{" "}
+                            {profile?.nome || "—"}{" "}
+                            {profile?.telefone ? `— ${profile.telefone}` : ""}
+                          </p>
+
+                          {/* ID do usuário (auditoria) */}
+                          {bombon.user_id && (
+                            <p className="text-xs text-muted-foreground">
+                              Cliente ID: {bombon.user_id}
+                            </p>
+                          )}
                         </div>
-                        <div>
-                          <strong>Ganache:</strong> {bombon.opcoes_ganache?.nome}
+                        <Badge className={getStatusColor(bombon.status)}>
+                          {getStatusText(bombon.status)}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <strong>Base:</strong> {bombon.opcoes_base?.nome}
+                          </div>
+                          <div>
+                            <strong>Ganache:</strong> {bombon.opcoes_ganache?.nome}
+                          </div>
+                          <div>
+                            <strong>Geleia:</strong>{" "}
+                            {bombon.opcoes_geleia?.nome || "Sem geleia"}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <strong>Cor:</strong>
+                            <div
+                              className="w-4 h-4 rounded border border-border"
+                              style={{
+                                backgroundColor: bombon.opcoes_cor?.codigo_hex,
+                              }}
+                            />
+                            {bombon.opcoes_cor?.nome}
+                          </div>
                         </div>
-                        <div>
-                          <strong>Geleia:</strong> {bombon.opcoes_geleia?.nome || "Sem geleia"}
+
+                        <div className="flex gap-2">
+                          {bombon.status === "enviado" && (
+                            <Button
+                              size="sm"
+                              onClick={() => updateStatus(bombon.id, "em_producao")}
+                            >
+                              Iniciar Produção
+                            </Button>
+                          )}
+                          {bombon.status === "em_producao" && (
+                            <Button
+                              size="sm"
+                              onClick={() => updateStatus(bombon.id, "finalizado")}
+                            >
+                              Finalizar
+                            </Button>
+                          )}
                         </div>
-                        <div className="flex items-center gap-2">
-                          <strong>Cor:</strong>
-                          <div 
-                            className="w-4 h-4 rounded border border-border"
-                            style={{ backgroundColor: bombon.opcoes_cor?.codigo_hex }}
-                          />
-                          {bombon.opcoes_cor?.nome}
+
+                        <div className="text-xs text-muted-foreground">
+                          Criado em:{" "}
+                          {new Date(bombon.created_at).toLocaleDateString("pt-BR")}
                         </div>
                       </div>
-                      
-                      <div className="flex gap-2">
-                        {bombon.status === 'enviado' && (
-                          <Button 
-                            size="sm" 
-                            onClick={() => updateStatus(bombon.id, 'em_producao')}
-                          >
-                            Iniciar Produção
-                          </Button>
-                        )}
-                        {bombon.status === 'em_producao' && (
-                          <Button 
-                            size="sm" 
-                            onClick={() => updateStatus(bombon.id, 'finalizado')}
-                          >
-                            Finalizar
-                          </Button>
-                        )}
-                      </div>
-                      
-                      <div className="text-xs text-muted-foreground">
-                        Criado em: {new Date(bombon.created_at).toLocaleDateString('pt-BR')}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </TabsContent>
