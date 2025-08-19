@@ -157,7 +157,7 @@ Foto hiper-realista, em estúdio profissional, de bombons artesanais de ${select
           <CardTitle>Preview do Bombom</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-gradient-to-br from-background to-muted rounded-lg aspect-square w-full max-w-xl mx-auto flex items-center justify-center border-2 border-dashed border-border overflow-hidden">
+          <div className="bg-gradient-to-br from-background to-muted rounded-lg aspect-square w-full max-w-md mx-auto flex items-center justify-center border-2 border-dashed border-border overflow-hidden">
             {generatedImageUrl ? (
               <img 
                 src={generatedImageUrl} 
