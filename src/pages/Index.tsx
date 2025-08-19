@@ -33,7 +33,7 @@ const Index = () => {
           {/* Right Column - Preview Area */}
           <div className="order-1 lg:order-2">
             <h2 className="text-2xl font-bold mb-6 text-foreground">
-              Seu Bombom
+              Sua Criação
             </h2>
             <PreviewArea selection={selection} />
           </div>
