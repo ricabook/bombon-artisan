@@ -1,153 +1,126 @@
+/* src/index.css */
+
+/* Tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* ------------------------------------------------------------------
+   Base tokens (compatível com shadcn/ui). 
+   Se você já tinha tokens aqui, pode manter os seus e apenas 
+   garantir que o bloco de OVERRIDE no final fique por último.
+-------------------------------------------------------------------*/
 @layer base {
   :root {
-    /* Chocolate & Confectionery Palette */
-    --background: 35 20% 97%;
-    --foreground: 25 25% 15%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 35 25% 98%;
-    --card-foreground: 25 25% 15%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --popover: 35 25% 98%;
-    --popover-foreground: 25 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    /* Rich chocolate brown as primary */
-    --primary: 260 82% 30%;
-    --primary-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    /* Warm cream as secondary */
-    --secondary: 352 76% 64%;
-    --secondary-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
 
-    --muted: 35 20% 94%;
-    --muted-foreground: 25 15% 45%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-    /* Golden accent for elegance */
-    --accent: 45 85% 65%;
-    --accent-foreground: 25 40% 25%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 35 25% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 35 20% 88%;
-    --input: 35 20% 95%;
-    --ring: 260 82% 30%;
-
-    --radius: 0.75rem;
-
-    /* Custom chocolate theme colors */
-    --chocolate-dark: 25 50% 20%;
-    --chocolate-medium: 25 40% 35%;
-    --chocolate-light: 25 30% 55%;
-    --chocolate-milk: 35 25% 75%;
-    
-    /* Golden tones */
-    --gold-light: 45 75% 75%;
-    --gold-medium: 45 85% 65%;
-    --gold-dark: 45 65% 45%;
-    
-    /* Cream and whites */
-    --cream-light: 35 30% 96%;
-    --cream-medium: 35 25% 92%;
-    --cream-dark: 35 20% 85%;
-
-    /* Gradients */
-    --gradient-chocolate: linear-gradient(135deg, hsl(var(--chocolate-dark)), hsl(var(--chocolate-medium)));
-    --gradient-gold: linear-gradient(135deg, hsl(var(--gold-medium)), hsl(var(--gold-light)));
-    --gradient-cream: linear-gradient(180deg, hsl(var(--cream-light)), hsl(var(--cream-medium)));
-
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--chocolate-dark) / 0.2);
-    --shadow-glow: 0 0 20px hsl(var(--gold-medium) / 0.3);
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-elegant: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 215 20.2% 65.1%;
+    --radius: 0.5rem;
   }
 
+  /* Tema escuro base (será sobrescrito pelo OVERRIDE no final) */
   .dark {
-    /* Dark chocolate theme */
-    --background: 25 30% 8%;
-    --foreground: 35 25% 95%;
+    --background: 240 10% 10%;
+    --foreground: 210 40% 98%;
 
-    --card: 25 25% 12%;
-    --card-foreground: 35 25% 95%;
+    --muted: 240 10% 14%;
+    --muted-foreground: 240 5% 65%;
 
-    --popover: 25 25% 12%;
-    --popover-foreground: 35 25% 95%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 45 75% 75%;
-    --primary-foreground: 25 30% 8%;
+    --card: 240 10% 10%;
+    --card-foreground: 210 40% 98%;
 
-    --secondary: 25 20% 20%;
-    --secondary-foreground: 35 25% 95%;
+    --border: 240 4% 26%;
+    --input: 240 4% 26%;
 
-    --muted: 25 15% 18%;
-    --muted-foreground: 35 15% 65%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 45 85% 65%;
-    --accent-foreground: 25 30% 8%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 35 25% 95%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 210 40% 98%;
 
-    --border: 25 15% 22%;
-    --input: 25 15% 18%;
-    --ring: 45 75% 75%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
 
-    /* Dark theme chocolate colors */
-    --chocolate-dark: 25 40% 15%;
-    --chocolate-medium: 25 35% 25%;
-    --chocolate-light: 25 30% 40%;
-    --chocolate-milk: 35 20% 60%;
-    
-    --gold-light: 45 70% 70%;
-    --gold-medium: 45 80% 60%;
-    --gold-dark: 45 60% 40%;
-    
-    --cream-light: 35 15% 25%;
-    --cream-medium: 35 12% 20%;
-    --cream-dark: 35 10% 15%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 240 4.9% 83.9%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ------------------------------------------------------------------
+   OVERRIDE DARK MODE (#9577d6)
+   Deixe este bloco por ÚLTIMO no arquivo para ter precedência.
+-------------------------------------------------------------------*/
+@layer base {
+  /* Ajusta as CSS variables quando .dark estiver no <html> */
+  html.dark,
+  :root.dark,
+  .dark {
+    /* HSL de #9577d6 ≈ 259 54% 65% */
+    --background: 259 54% 65%;
+    --foreground: 0 0% 100%;
+
+    /* superfícies comuns do shadcn/ui */
+    --card: 259 54% 65%;
+    --card-foreground: 0 0% 100%;
+    --popover: 259 54% 65%;
+    --popover-foreground: 0 0% 100%;
+
+    --border: 259 40% 45%;
+    --input: 259 40% 45%;
+    --ring: 259 40% 45%;
+
+    --primary: 259 54% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 259 50% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 259 25% 55%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 259 45% 58%;
+    --accent-foreground: 0 0% 100%;
+  }
+
+  /* Garante o fundo real roxo no dark (mesmo se algum container usar bg-*) */
+  html.dark,
+  .dark body,
+  .dark #root {
+    background-color: hsl(259 54% 65%) !important; /* #9577d6 */
   }
 }
