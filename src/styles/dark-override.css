@@ -1,0 +1,35 @@
+/* src/styles/dark-override.css */
+@layer base {
+  /* HSL para #380E8F ≈ 259 82% 31% */
+  .dark {
+    --background: 259 82% 31%;
+    --foreground: 0 0% 100%;
+
+    /* Opcional mas recomendado para consistência visual: */
+    --card: 259 82% 31%;
+    --card-foreground: 0 0% 100%;
+    --popover: 259 82% 31%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Se quiser realçar contraste de bordas/aneis no roxo */
+    --border: 259 82% 45%;
+    --input: 259 82% 45%;
+    --ring: 259 82% 45%;
+
+    /* Se usar primary/secondary do tema para superfícies */
+    /* Ajuste opcional; pode manter seus valores atuais se preferir */
+    --primary: 259 82% 31%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 259 82% 36%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 259 20% 25%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 259 50% 28%;
+    --accent-foreground: 0 0% 100%;
+  }
+
+  /* Garante que body use as tokens */
+  body {
+    @apply bg-background text-foreground;
+  }
+}
