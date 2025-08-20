@@ -48,7 +48,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
         {/* LOGO + link (restaurado) */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
