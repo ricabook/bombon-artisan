@@ -85,7 +85,7 @@
 }
 
 /* ------------------------------------------------------------------
-   OVERRIDE DARK MODE (#9577d6)
+   OVERRIDE DARK MODE (#380e8e)
    Deixe este bloco por ÚLTIMO no arquivo para ter precedência.
 -------------------------------------------------------------------*/
 @layer base {
@@ -93,27 +93,27 @@
   html.dark,
   :root.dark,
   .dark {
-    /* HSL de #9577d6 ≈ 259 54% 65% */
-    --background: 259 54% 65%;
+    /* #380e8e ≈ hsl(260 82% 31%) */
+    --background: 260 82% 31%;
     --foreground: 0 0% 100%;
 
     /* superfícies comuns do shadcn/ui */
-    --card: 259 54% 65%;
+    --card: 260 82% 31%;
     --card-foreground: 0 0% 100%;
-    --popover: 259 54% 65%;
+    --popover: 260 82% 31%;
     --popover-foreground: 0 0% 100%;
 
-    --border: 259 40% 45%;
-    --input: 259 40% 45%;
-    --ring: 259 40% 45%;
+    --border: 260 40% 45%;
+    --input: 260 40% 45%;
+    --ring: 260 40% 45%;
 
-    --primary: 259 54% 65%;
+    --primary: 260 82% 31%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 259 50% 60%;
+    --secondary: 260 60% 28%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 259 25% 55%;
+    --muted: 260 25% 25%;
     --muted-foreground: 0 0% 100%;
-    --accent: 259 45% 58%;
+    --accent: 260 50% 28%;
     --accent-foreground: 0 0% 100%;
   }
 
@@ -121,6 +121,6 @@
   html.dark,
   .dark body,
   .dark #root {
-    background-color: hsl(259 54% 65%) !important; /* #9577d6 */
+    background-color: hsl(260 82% 31%) !important; /* #380e8e */
   }
 }
