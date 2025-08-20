@@ -21,11 +21,18 @@ import useAuth from "./hooks/useAuth";
 const queryClient = new QueryClient();
 
 const THEME_KEY = "theme";
-function ensureDefaultDarkTheme() {
+
+/**
+ * Deixa o TEMA CLARO como padrão.
+ * - Se não houver preferência salva, grava "light" e remove a classe .dark do <html>.
+ * - Se houver "dark", aplica a classe .dark.
+ * - Se houver "light", garante que .dark não está aplicada.
+ */
+function ensureDefaultLightTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (!saved) {
-    localStorage.setItem(THEME_KEY, "dark");
-    document.documentElement.classList.add("dark");
+    localStorage.setItem(THEME_KEY, "light"); // padrão = claro
+    document.documentElement.classList.remove("dark");
   } else if (saved === "dark") {
     document.documentElement.classList.add("dark");
   } else {
@@ -136,9 +143,12 @@ const RouterContent: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground dark:bg-darkBg dark:text-white">
-      {/* Garantia extra: define body roxo no dark para evitar “marrom” herdado */}
-      <style>{`.dark body { background-color: #9577d6 !important; }`}</style>
+    // No claro, usamos bg-white; no dark, usamos o token darkBg (definido no tailwind.config.ts)
+    <div className="min-h-screen bg-white text-foreground dark:bg-darkBg dark:text-white">
+      {/* Fallback adicional: força de forma global o body no dark
+          (mantenha esta cor em sincronia com seu index.css override)
+          -> #380e8e */}
+      <style>{`.dark body { background-color: #380e8e !important; }`}</style>
 
       <Header />
 
@@ -171,8 +181,9 @@ const RouterContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  // CLARO como padrão
   useEffect(() => {
-    ensureDefaultDarkTheme();
+    ensureDefaultLightTheme();
   }, []);
 
   return (
