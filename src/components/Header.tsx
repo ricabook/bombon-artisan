@@ -58,13 +58,11 @@ const Header: React.FC = () => {
             <img
               src="/logo.png"
               alt="La Vie Pâtisserie"
-              className="h-8 w-auto"
+              className="h-20 w-auto"
               loading="eager"
               decoding="async"
             />
-            <span className="text-xl font-bold text-foreground dark:text-white">
-              La Vie Pâtisserie
-            </span>
+
           </Link>
         </div>
 
