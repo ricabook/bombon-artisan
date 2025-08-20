@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { supabase } from "@/integrations/supabase/client";
 import useAuth from "@/hooks/useAuth";
 import OptionsManager from "@/components/OptionsManager";
@@ -26,6 +27,13 @@ interface Bombon {
 }
 
 type ProfileRow = { user_id: string; nome: string; telefone: string };
+
+/** Garante que uma string base64 tenha prefixo data URL válido */
+function asDataUrl(b64?: string | null, mime = "image/png") {
+  if (!b64) return null;
+  if (b64.startsWith("data:")) return b64;
+  return `data:${mime};base64,${b64}`;
+}
 
 const AdminDashboard = () => {
   const [bombons, setBombons] = useState<Bombon[]>([]);
@@ -248,6 +256,8 @@ const AdminDashboard = () => {
                 const clienteNome = profile?.nome || bombon.nome_guest || "—";
                 const clienteTelefone = profile?.telefone || bombon.telefone_guest || "";
 
+                const imgUrl = asDataUrl(bombon.url_imagem_base64);
+
                 return (
                   <Card key={bombon.id}>
                     <CardHeader>
@@ -295,23 +305,34 @@ const AdminDashboard = () => {
 
                     <CardContent>
                       <div className="space-y-4">
-                        {bombon.url_imagem_base64 && (
+                        {imgUrl && (
                           <div className="flex justify-center">
                             <Dialog>
                               <DialogTrigger asChild>
-                                <button className="cursor-pointer hover:opacity-80 transition-opacity">
+                                <button className="cursor-pointer hover:opacity-80 transition-opacity" title="Clique para ampliar" aria-label="Abrir imagem do pedido">
                                   <img
-                                    src={bombon.url_imagem_base64}
+                                    src={imgUrl}
                                     alt="Thumbnail do bombom gerado"
                                     className="w-20 h-20 object-cover rounded-lg border shadow-sm"
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.png"; }}
                                   />
                                 </button>
                               </DialogTrigger>
+
                               <DialogContent className="max-w-2xl">
+                                {/* Acessibilidade exigida pelo Radix */}
+                                <VisuallyHidden>
+                                  <DialogTitle>Imagem do pedido</DialogTitle>
+                                  <DialogDescription>Pré-visualização em tamanho maior da imagem gerada pela IA.</DialogDescription>
+                                </VisuallyHidden>
+
                                 <img
-                                  src={bombon.url_imagem_base64}
+                                  src={imgUrl}
                                   alt="Imagem do bombom gerado pela IA"
                                   className="w-full h-auto rounded-lg"
+                                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.png"; }}
                                 />
                               </DialogContent>
                             </Dialog>
