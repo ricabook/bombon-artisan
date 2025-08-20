@@ -22,19 +22,22 @@ const Header: React.FC = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
 
-  // Toggle Dark/Light
+  // ---- Dark/Light toggle state ----
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+
   useEffect(() => {
     const saved = (localStorage.getItem(THEME_KEY) as "dark" | "light") || "dark";
     setTheme(saved);
     applyThemeClass(saved);
   }, []);
+
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     localStorage.setItem(THEME_KEY, next);
     applyThemeClass(next);
   };
+  // ---------------------------------
 
   const handleOpenAuth = (mode: AuthMode) => {
     setAuthMode(mode);
@@ -49,10 +52,10 @@ const Header: React.FC = () => {
   return (
     <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-        {/* LOGO preservado */}
+        {/* ====== LOGO (preservado) ====== */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
-            {/* Ajuste se seu arquivo for outro (ex.: /logo.svg) */}
+            {/* Ajuste o caminho do logo conforme o seu arquivo em /public */}
             <img
               src="/logo.png"
               alt="La Vie Pâtisserie"
@@ -65,6 +68,7 @@ const Header: React.FC = () => {
             </span>
           </Link>
         </div>
+        {/* ================================= */}
 
         <nav className="flex items-center gap-3">
           <Link
@@ -92,7 +96,7 @@ const Header: React.FC = () => {
             </Link>
           )}
 
-          {/* Toggle SEM condicional (aparece sempre) */}
+          {/* ---- Toggle sempre visível ---- */}
           <button
             type="button"
             onClick={toggleTheme}
@@ -105,8 +109,9 @@ const Header: React.FC = () => {
           >
             {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
           </button>
+          {/* -------------------------------- */}
 
-          {/* Área de autenticação */}
+          {/* Autenticação */}
           {!user ? (
             <div className="flex items-center gap-2">
               <Button
