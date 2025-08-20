@@ -22,13 +22,15 @@ const Header: React.FC = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
 
-  // Toggle Dark/Light
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  // Tema: agora o padrão é "light"
+  const [theme, setTheme] = useState<"dark" | "light">("light");
+
   useEffect(() => {
-    const saved = (localStorage.getItem(THEME_KEY) as "dark" | "light") || "dark";
+    const saved = (localStorage.getItem(THEME_KEY) as "dark" | "light") || "light";
     setTheme(saved);
     applyThemeClass(saved);
   }, []);
+
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -48,18 +50,21 @@ const Header: React.FC = () => {
 
   return (
     <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
-      <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-        {/* LOGO + link (restaurado) */}
+      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
+        {/* LOGO + link */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
-            {/* Ajuste o arquivo conforme seu /public (png/svg) */}
+            {/* Ajuste o caminho/arquivo conforme o seu /public (png/svg) */}
             <img
               src="/logo.png"
               alt="La Vie Pâtisserie"
-              className="h-20 w-auto"
+              className="h-8 w-auto"
               loading="eager"
               decoding="async"
             />
+            <span className="text-xl font-bold text-foreground dark:text-white">
+              La Vie Pâtisserie
+            </span>
           </Link>
         </div>
 
@@ -68,7 +73,7 @@ const Header: React.FC = () => {
             to="/"
             className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
           >
-          
+            Início
           </Link>
 
           {user && (
@@ -100,7 +105,7 @@ const Header: React.FC = () => {
             aria-label="Alternar tema"
             title="Alternar tema"
           >
-            {theme === "dark" ? "☀️ Tema Claro" : "🌙 Tema Escuro"}
+            {theme === "dark" ? "🌙 Tema Escuro" : "☀️ Tema Claro"}
           </button>
 
           {/* Área de autenticação */}
