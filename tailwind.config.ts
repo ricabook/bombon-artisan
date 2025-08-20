@@ -19,7 +19,7 @@ const config = {
       colors: {
         // Dark mode tokens
         darkBg: "#380e8e",   // <- NOVO fundo do dark mode
-        darkButton: "#DA5043",
+        darkButton: "#F3F3F5",
         // shadcn tokens (mantidos)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
