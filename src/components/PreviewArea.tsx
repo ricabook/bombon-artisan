@@ -247,7 +247,7 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
             <Button 
               className="w-full" 
               size="lg"
-              variant="default"
+              variant="cta"
               onClick={handleGenerateImage}
               disabled={isGeneratingImage || !selection.chocolate || !selection.base || !selection.ganache || !selection.cor}
             >
