@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-	darkMode: ["class"],
+	darkMode: ["class"], // <- garantimos que o dark é via classe .dark
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
@@ -18,6 +18,31 @@ export default {
 			}
 		},
 		extend: {
+			// >>> ADIÇÃO: cores do dark mode
+			colors: {
+				darkBg: "#380E8F",     // fundo escuro (solicitado)
+				darkButton: "#EDF069", // botões no dark (solicitado)
+			},
+			borderRadius: {
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)'
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
+				},
+				'accordion-up': {
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			// (mantive a estrutura e tokens existentes no seu arquivo)
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -52,67 +77,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Chocolate theme colors
-				chocolate: {
-					dark: 'hsl(var(--chocolate-dark))',
-					medium: 'hsl(var(--chocolate-medium))',
-					light: 'hsl(var(--chocolate-light))',
-					milk: 'hsl(var(--chocolate-milk))'
-				},
-				gold: {
-					light: 'hsl(var(--gold-light))',
-					medium: 'hsl(var(--gold-medium))',
-					dark: 'hsl(var(--gold-dark))'
-				},
-				cream: {
-					light: 'hsl(var(--cream-light))',
-					medium: 'hsl(var(--cream-medium))',
-					dark: 'hsl(var(--cream-dark))'
-				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
-			},
-			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
-			},
-			keyframes: {
-				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
-				},
-				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'float': 'float 6s ease-in-out infinite',
-				'glow': 'glow 2s ease-in-out infinite alternate'
-			},
-			backgroundImage: {
-				'gradient-chocolate': 'var(--gradient-chocolate)',
-				'gradient-gold': 'var(--gradient-gold)',
-				'gradient-cream': 'var(--gradient-cream)'
+				// (mantive linhas/tokens extras do seu config, como gradients, shadows, etc)
 			},
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',

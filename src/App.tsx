@@ -20,7 +20,19 @@ import useAuth from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
-/** Rota protegida (user/admin) */
+const THEME_KEY = "theme"; // "dark" | "light"
+function ensureDefaultDarkTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (!saved) {
+    localStorage.setItem(THEME_KEY, "dark");
+    document.documentElement.classList.add("dark");
+  } else if (saved === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
 const ProtectedRoute = ({
   children,
   requireAdmin = false,
@@ -43,12 +55,10 @@ const ProtectedRoute = ({
   return <>{children}</>;
 };
 
-/** Lightbox da página inicial */
 const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
   open,
   onClose,
 }) => {
-  // ESC para fechar
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -59,7 +69,6 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
   useEffect(() => {
     if (open) {
       document.addEventListener("keydown", handleKeyDown);
-      // trava rolagem
       const original = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
@@ -89,7 +98,7 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
       <div
         className="relative mx-4 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          backgroundImage: "url('/hero-bg.jpg')",
+          backgroundImage: "url('/hero-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -107,7 +116,7 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
         </button>
 
         <div className="relative z-10 p-6 sm:p-10 text-center">
-          <h1 className="text-white text-3xl sm:text-3xl md:text-4xl font-bold mb-6 leading-tight">
+          <h1 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 leading-tight">
             Crie seu Bombom by La Vie Pâtisserie
           </h1>
 
@@ -131,21 +140,20 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
   );
 };
 
-/** Conteúdo com Router (usa useLocation) */
 const RouterContent: React.FC = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
-
-  // abre lightbox apenas na home
   const [showLightbox, setShowLightbox] = useState<boolean>(isHome);
 
-  // se navegar para fora/voltar para home, ajusta exibição
   useEffect(() => {
     setShowLightbox(location.pathname === "/");
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground dark:bg-darkBg dark:text-white">
+      {/* Força o body a usar o roxo no dark para evitar tom marrom herdado de tokens */}
+      <style>{`.dark body { background-color: #380E8F !important; }`}</style>
+
       <Header />
 
       {/* Lightbox apenas na home */}
@@ -180,18 +188,25 @@ const RouterContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      {/* Toasts globais */}
-      <Toaster />
-      <Sonner />
+const App: React.FC = () => {
+  // Dark como padrão
+  useEffect(() => {
+    ensureDefaultDarkTheme();
+  }, []);
 
-      <BrowserRouter>
-        <RouterContent />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        {/* Toasts globais */}
+        <Toaster />
+        <Sonner />
+
+        <BrowserRouter>
+          <RouterContent />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
