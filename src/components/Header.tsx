@@ -60,9 +60,6 @@ const Header: React.FC = () => {
               loading="eager"
               decoding="async"
             />
-            <span className="text-xl font-bold text-foreground dark:text-white">
-              La Vie Pâtisserie
-            </span>
           </Link>
         </div>
 
