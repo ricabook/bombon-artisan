@@ -20,7 +20,7 @@ import useAuth from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
-const THEME_KEY = "theme"; // "dark" | "light"
+const THEME_KEY = "theme";
 function ensureDefaultDarkTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (!saved) {
@@ -43,14 +43,8 @@ const ProtectedRoute = ({
   const { user, isAdmin, loading } = useAuth();
 
   if (loading) return null;
-
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (requireAdmin && !isAdmin) {
-    return <Navigate to="/" replace />;
-  }
+  if (!user) return <Navigate to="/" replace />;
+  if (requireAdmin && !isAdmin) return <Navigate to="/" replace />;
 
   return <>{children}</>;
 };
@@ -87,26 +81,18 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
       aria-modal="true"
       aria-label="Informações iniciais"
     >
-      {/* backdrop */}
-      <div
-        className="absolute inset-0 bg-black/70"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} aria-hidden="true" />
 
-      {/* conteúdo do lightbox */}
       <div
         className="relative mx-4 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          backgroundImage: "url('/hero-bg.png')",
+          backgroundImage: "url('/hero-bg.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        {/* camada de contraste */}
         <div className="absolute inset-0 bg-black/55" />
 
-        {/* botão fechar */}
         <button
           onClick={onClose}
           aria-label="Fechar"
@@ -151,19 +137,17 @@ const RouterContent: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground dark:bg-darkBg dark:text-white">
-      {/* Força o body a usar o roxo no dark para evitar tom marrom herdado de tokens */}
+      {/* Garantia extra: deixa o body roxo no modo escuro (evita “marrom” herdado de tokens) */}
       <style>{`.dark body { background-color: #380E8F !important; }`}</style>
 
       <Header />
 
-      {/* Lightbox apenas na home */}
       {isHome && (
         <HomeHeroLightbox open={showLightbox} onClose={() => setShowLightbox(false)} />
       )}
 
       <Routes>
         <Route path="/" element={<Index />} />
-
         <Route
           path="/dashboard"
           element={
@@ -172,7 +156,6 @@ const RouterContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin"
           element={
@@ -181,7 +164,6 @@ const RouterContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
@@ -189,7 +171,6 @@ const RouterContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  // Dark como padrão
   useEffect(() => {
     ensureDefaultDarkTheme();
   }, []);
@@ -197,7 +178,6 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {/* Toasts globais */}
         <Toaster />
         <Sonner />
 
