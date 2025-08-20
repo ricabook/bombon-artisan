@@ -24,11 +24,13 @@ export default function GeradorBombom({ selecao, aspectRatio = '1:1', outputForm
         onClick={() => gerar(selecao)}
         disabled={loading}
         className="
+    inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium
     bg-primary text-primary-foreground
     dark:bg-darkButton dark:text-darkBg
     border border-transparent dark:border-darkBg/50
     shadow-md dark:shadow-black/10
     dark:hover:brightness-95
+    focus:outline-none focus:ring-2 focus:ring-ring
   "
       >
         {loading ? 'Gerando…' : 'Gerar imagem do bombom'}
