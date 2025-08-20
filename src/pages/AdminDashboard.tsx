@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import useAuth from "@/hooks/useAuth";
 import OptionsManager from "@/components/OptionsManager";
+import { addDays } from "date-fns";
 
 interface Bombon {
   id: string;
@@ -13,6 +15,7 @@ interface Bombon {
   status: string;
   created_at: string;
   user_id: string;
+  url_imagem_base64: string | null;
   opcoes_chocolate: { nome: string };
   opcoes_base: { nome: string };
   opcoes_ganache: { nome: string };
@@ -28,6 +31,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
@@ -46,6 +50,7 @@ const AdminDashboard = () => {
           status,
           created_at,
           user_id,
+          url_imagem_base64,
           opcoes_chocolate (nome),
           opcoes_base (nome),
           opcoes_ganache (nome),
@@ -279,6 +284,29 @@ const AdminDashboard = () => {
 
                     <CardContent>
                       <div className="space-y-4">
+                        {bombon.url_imagem_base64 && (
+                          <div className="flex justify-center">
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <button className="cursor-pointer hover:opacity-80 transition-opacity">
+                                  <img
+                                    src={bombon.url_imagem_base64}
+                                    alt="Thumbnail do bombom gerado"
+                                    className="w-20 h-20 object-cover rounded-lg border shadow-sm"
+                                  />
+                                </button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-2xl">
+                                <img
+                                  src={bombon.url_imagem_base64}
+                                  alt="Imagem do bombom gerado pela IA"
+                                  className="w-full h-auto rounded-lg"
+                                />
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        )}
+
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
                             <strong>Base:</strong> {bombon.opcoes_base?.nome}
@@ -321,9 +349,15 @@ const AdminDashboard = () => {
                           )}
                         </div>
 
-                        <div className="text-xs text-muted-foreground">
-                          Criado em:{" "}
-                          {new Date(bombon.created_at).toLocaleDateString("pt-BR")}
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <div>
+                            Criado em:{" "}
+                            {new Date(bombon.created_at).toLocaleDateString("pt-BR")}
+                          </div>
+                          <div>
+                            Prazo para produção:{" "}
+                            {addDays(new Date(bombon.created_at), 7).toLocaleDateString("pt-BR")}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
