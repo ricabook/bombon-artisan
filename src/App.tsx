@@ -20,6 +20,19 @@ import useAuth from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
+const THEME_KEY = "theme";
+function ensureDefaultDarkTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (!saved) {
+    localStorage.setItem(THEME_KEY, "dark");
+    document.documentElement.classList.add("dark");
+  } else if (saved === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
 /** Rota protegida (user/admin) */
 const ProtectedRoute = ({
   children,
@@ -89,7 +102,7 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
       <div
         className="relative mx-4 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          backgroundImage: "url('/hero-bg.jpg')",
+          backgroundImage: "url('/hero-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -145,7 +158,7 @@ const RouterContent: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground dark:bg-darkBg dark:text-white">
       <Header />
 
       {/* Lightbox apenas na home */}
@@ -180,7 +193,9 @@ const RouterContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  useEffect(() => { ensureDefaultDarkTheme(); }, []);
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       {/* Toasts globais */}
@@ -193,5 +208,6 @@ const App: React.FC = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+};
 
 export default App;

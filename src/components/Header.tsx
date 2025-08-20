@@ -1,14 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import AuthDialog from "./AuthDialog";
 import useAuth from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 
+const THEME_KEY = "theme";
+
+function applyThemeClass(theme: "dark" | "light") {
+  const root = document.documentElement;
+  if (theme === "dark") root.classList.add("dark");
+  else root.classList.remove("dark");
+}
+
 const Header = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const { user, isAdmin, signOut } = useAuth();
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const saved = (localStorage.getItem(THEME_KEY) as "dark" | "light") || "dark";
+    setTheme(saved);
+    applyThemeClass(saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+    applyThemeClass(next);
+  };
   const { toast } = useToast();
 
   const handleOpenAuth = (mode: "login" | "register") => {
@@ -25,7 +47,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4">
+    <header className="bg-card border-b border-border px-6 py-4 dark:bg-darkBg/90">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
 {/* Novo logotipo com link para a página inicial */}
 <Link to="/" aria-label="Ir para a página inicial">
