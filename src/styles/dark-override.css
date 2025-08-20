@@ -1,0 +1,30 @@
+/* src/styles/dark-override.css */
+@layer base {
+  /* HSL aproximado de #9577d6 */
+  .dark {
+    --background: 259 54% 65%;
+    --foreground: 0 0% 100%;
+
+    --card: 259 54% 65%;
+    --card-foreground: 0 0% 100%;
+    --popover: 259 54% 65%;
+    --popover-foreground: 0 0% 100%;
+
+    --border: 259 40% 45%;
+    --input: 259 40% 45%;
+    --ring: 259 40% 45%;
+
+    --primary: 259 54% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 259 50% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 259 25% 55%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 259 45% 58%;
+    --accent-foreground: 0 0% 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
