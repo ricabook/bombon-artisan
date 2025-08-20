@@ -14,8 +14,10 @@ interface Bombon {
   prompt_gerado: string;
   status: string;
   created_at: string;
-  user_id: string;
+  user_id: string | null;
   url_imagem_base64: string | null;
+  nome_guest: string | null;
+  telefone_guest: string | null;
   opcoes_chocolate: { nome: string };
   opcoes_base: { nome: string };
   opcoes_ganache: { nome: string };
@@ -50,6 +52,8 @@ const AdminDashboard = () => {
           created_at,
           user_id,
           url_imagem_base64,
+          nome_guest,
+          telefone_guest,
           opcoes_chocolate (nome),
           opcoes_base (nome),
           opcoes_ganache (nome),
@@ -240,6 +244,10 @@ const AdminDashboard = () => {
                   ? profilesMap[bombon.user_id]
                   : null;
 
+                // Determinar nome e telefone (profile ou guest)
+                const clienteNome = profile?.nome || bombon.nome_guest || "—";
+                const clienteTelefone = profile?.telefone || bombon.telefone_guest || "";
+
                 return (
                   <Card key={bombon.id}>
                     <CardHeader>
@@ -251,13 +259,17 @@ const AdminDashboard = () => {
 
                           <p className="text-sm text-muted-foreground">
                             <span className="font-medium">Cliente:</span>{" "}
-                            {profile?.nome || "—"}{" "}
-                            {profile?.telefone ? `— ${profile.telefone}` : ""}
+                            {clienteNome}{" "}
+                            {clienteTelefone ? `— ${clienteTelefone}` : ""}
                           </p>
 
-                          {bombon.user_id && (
+                          {bombon.user_id ? (
                             <p className="text-xs text-muted-foreground">
                               Cliente ID: {bombon.user_id}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-muted-foreground">
+                              Cliente não cadastrado (pedido como visitante)
                             </p>
                           )}
                         </div>

@@ -35,8 +35,10 @@ export type Database = {
           ganache_id: string | null
           geleia_id: string | null
           id: string
+          nome_guest: string | null
           prompt_gerado: string | null
           status: string | null
+          telefone_guest: string | null
           updated_at: string
           url_imagem: string | null
           url_imagem_base64: string | null
@@ -50,8 +52,10 @@ export type Database = {
           ganache_id?: string | null
           geleia_id?: string | null
           id?: string
+          nome_guest?: string | null
           prompt_gerado?: string | null
           status?: string | null
+          telefone_guest?: string | null
           updated_at?: string
           url_imagem?: string | null
           url_imagem_base64?: string | null
@@ -65,8 +69,10 @@ export type Database = {
           ganache_id?: string | null
           geleia_id?: string | null
           id?: string
+          nome_guest?: string | null
           prompt_gerado?: string | null
           status?: string | null
+          telefone_guest?: string | null
           updated_at?: string
           url_imagem?: string | null
           url_imagem_base64?: string | null
