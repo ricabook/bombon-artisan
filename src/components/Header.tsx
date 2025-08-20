@@ -100,7 +100,7 @@ const Header: React.FC = () => {
             aria-label="Alternar tema"
             title="Alternar tema"
           >
-            {theme === "dark" ? "🌙 Tema Escuro" : "☀️ Tema Claro"}
+            {theme === "dark" ? "🌙 Tema Claro" : "☀️ Tema Escuro"}
           </button>
 
           {/* Área de autenticação */}
