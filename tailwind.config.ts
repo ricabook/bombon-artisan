@@ -18,10 +18,6 @@ export default {
 			}
 		},
 		extend: {
-      colors: {
-        darkBg: "#380E8F",
-        darkButton: "#EDF069",
-      },
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
