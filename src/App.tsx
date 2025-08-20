@@ -89,7 +89,7 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
       <div
         className="relative mx-4 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          backgroundImage: "url('/hero-bg.png')",
+          backgroundImage: "url('/hero-bg.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
