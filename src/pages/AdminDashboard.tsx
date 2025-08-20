@@ -31,7 +31,6 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const AdminDashboard = () => {
         return;
       }
 
-      const pedidos = (data || []) as Bombon[];
+      const pedidos = data ? (data as Bombon[]) : [];
       setBombons(pedidos);
 
       const userIds = Array.from(
@@ -131,7 +130,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // EXCLUSÃO via RPC delete_bombon (Opção B)
+  // EXCLUSÃO via RPC delete_bombon
   const handleDelete = async (id: string) => {
     const ok = window.confirm(
       "Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita."

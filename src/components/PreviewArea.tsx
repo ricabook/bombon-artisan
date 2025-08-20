@@ -81,6 +81,7 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
           cor_id: selection.cor.id,
           prompt_gerado: prompt,
           url_imagem: generatedImageUrl || null,
+          url_imagem_base64: imageBase64 || null,
           status: 'enviado'
         });
 

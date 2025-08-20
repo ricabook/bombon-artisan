@@ -14,6 +14,18 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          user_id: string
+        }
+        Insert: {
+          user_id: string
+        }
+        Update: {
+          user_id?: string
+        }
+        Relationships: []
+      }
       bombons: {
         Row: {
           base_id: string | null
@@ -27,6 +39,7 @@ export type Database = {
           status: string | null
           updated_at: string
           url_imagem: string | null
+          url_imagem_base64: string | null
           user_id: string
         }
         Insert: {
@@ -41,6 +54,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           url_imagem?: string | null
+          url_imagem_base64?: string | null
           user_id: string
         }
         Update: {
@@ -55,6 +69,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           url_imagem?: string | null
+          url_imagem_base64?: string | null
           user_id?: string
         }
         Relationships: [
@@ -245,6 +260,30 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_configs: {
+        Row: {
+          base_prompt: string
+          created_at: string
+          id: string
+          negative_prompt: string
+          updated_at: string
+        }
+        Insert: {
+          base_prompt?: string
+          created_at?: string
+          id?: string
+          negative_prompt?: string
+          updated_at?: string
+        }
+        Update: {
+          base_prompt?: string
+          created_at?: string
+          id?: string
+          negative_prompt?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -268,11 +307,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_bombon: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { uid: string }
         Returns: boolean
       }
     }
