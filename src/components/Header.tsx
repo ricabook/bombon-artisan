@@ -21,8 +21,6 @@ const Header: React.FC = () => {
 
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-
-  // ---- Dark/Light toggle state ----
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
@@ -37,12 +35,6 @@ const Header: React.FC = () => {
     localStorage.setItem(THEME_KEY, next);
     applyThemeClass(next);
   };
-  // ---------------------------------
-
-  const handleOpenAuth = (mode: AuthMode) => {
-    setAuthMode(mode);
-    setAuthDialogOpen(true);
-  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -52,23 +44,14 @@ const Header: React.FC = () => {
   return (
     <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-        {/* ====== LOGO (preservado) ====== */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
-            {/* Ajuste o caminho do logo conforme o seu arquivo em /public */}
-            <img
-              src="/logo.png"
-              alt="La Vie Pâtisserie"
-              className="h-8 w-auto"
-              loading="eager"
-              decoding="async"
-            />
+            {/* Caso tenha logo: <img src="/logo.png" alt="Logo" className="h-8 w-auto" /> */}
             <span className="text-xl font-bold text-foreground dark:text-white">
               La Vie Pâtisserie
             </span>
           </Link>
         </div>
-        {/* ================================= */}
 
         <nav className="flex items-center gap-3">
           <Link
@@ -96,34 +79,28 @@ const Header: React.FC = () => {
             </Link>
           )}
 
-          {/* ---- Toggle sempre visível ---- */}
-          <button
-            type="button"
+          {/* Toggle Dark/Light */}
+          <Button
             onClick={toggleTheme}
-            className="ml-2 inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                       bg-foreground text-background
-                       dark:bg-darkButton dark:text-darkBg
-                       hover:brightness-95 transition"
-            aria-label="Alternar tema"
-            title="Alternar tema"
+            className="ml-2 bg-foreground text-background dark:bg-darkButton dark:text-darkBg"
+            variant="default"
           >
             {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
-          </button>
-          {/* -------------------------------- */}
+          </Button>
 
-          {/* Autenticação */}
+          {/* Área de autenticação */}
           {!user ? (
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
-                onClick={() => handleOpenAuth("login")}
+                onClick={() => { setAuthMode("login"); setAuthDialogOpen(true); }}
                 className="text-foreground dark:text-white"
               >
                 Entrar
               </Button>
               <Button
                 variant="default"
-                onClick={() => handleOpenAuth("register")}
+                onClick={() => { setAuthMode("register"); setAuthDialogOpen(true); }}
                 className="bg-primary text-primary-foreground dark:bg-darkButton dark:text-darkBg"
               >
                 Criar conta
@@ -134,11 +111,7 @@ const Header: React.FC = () => {
               <span className="text-sm text-foreground/80 dark:text-white/80">
                 Olá, {user?.user_metadata?.nome || user?.email || "usuário"}
               </span>
-              <Button
-                variant="ghost"
-                onClick={handleSignOut}
-                className="text-foreground dark:text-white"
-              >
+              <Button variant="ghost" onClick={handleSignOut} className="text-foreground dark:text-white">
                 Sair
               </Button>
             </div>
