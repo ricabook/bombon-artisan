@@ -71,7 +71,7 @@ const Header: React.FC = () => {
             to="/"
             className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
           >
-            Início
+            
           </Link>
 
           {user && (
