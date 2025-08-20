@@ -107,7 +107,7 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
         </button>
 
         <div className="relative z-10 p-6 sm:p-10 text-center">
-          <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          <h1 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 leading-tight">
             Crie seu Bombom by La Vie Pâtisserie
           </h1>
 
