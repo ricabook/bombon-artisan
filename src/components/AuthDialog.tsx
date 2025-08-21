@@ -37,6 +37,12 @@ interface AuthDialogProps {
 const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const getRedirectUrl = () => {
+    const env = (import.meta as any).env?.VITE_REDIRECT_URL?.trim();
+    if (env) return env;
+    try { return `${window.location.origin}/minha-conta`; } catch { return "https://meubombom.laviepatisserie.com.br/minha-conta"; }
+  };
   const [isRecover, setIsRecover] = useState(false);
 
   const recoveryForm = useForm<z.infer<typeof recoverySchema>>({
@@ -95,7 +101,7 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   
   const onSubmitRecovery = async (values: z.infer<typeof recoverySchema>) => {
     try {
-      const redirectTo = `${window.location.origin}/minha-conta`;
+      const redirectTo = getRedirectUrl();
       const { error } = await supabase.auth.resetPasswordForEmail(values.email, { redirectTo });
       if (error) throw error;
       toast({
@@ -104,6 +110,7 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
       });
       setIsRecover(false);
     } catch (error: any) {
+      console.error('[resetPasswordForEmail]', error);
       toast({
         title: "Não foi possível enviar",
         description: error.message || "Tente novamente em instantes.",
