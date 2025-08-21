@@ -83,6 +83,15 @@ const Header: React.FC = () => {
             </Link>
           )}
 
+          {user && (
+            <Link
+              to="/minha-conta"
+              className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
+            >
+              Minha Conta
+            </Link>
+          )}
+
           {user && isAdmin && (
             <Link
               to="/admin"

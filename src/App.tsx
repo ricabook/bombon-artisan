@@ -14,6 +14,7 @@ import {
 import Index from "./pages/Index";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import MinhaConta from "./pages/MinhaConta";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import useAuth from "./hooks/useAuth";
@@ -171,6 +172,14 @@ const RouterContent: React.FC = () => {
           element={
             <ProtectedRoute requireAdmin>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/minha-conta"
+          element={
+            <ProtectedRoute>
+              <MinhaConta />
             </ProtectedRoute>
           }
         />
