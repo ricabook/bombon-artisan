@@ -94,12 +94,10 @@ const UserDashboard = () => {
             <p className="text-muted-foreground mb-4">
               Você ainda não criou nenhum bombom personalizado.
             </p>
-            <Button
-              className="w-full sm:w-auto"
-              onClick={() => navigate("/")}
-            >
-              Criar Meu Primeiro Bombom
-            </Button>
+            <Button asChild className="w-full sm:w-auto">
+  <Link to="/">Criar Meu Primeiro Bombom</Link>
+</Button>
+
           </CardContent>
         </Card>
       ) : (
