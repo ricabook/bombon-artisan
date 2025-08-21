@@ -81,7 +81,7 @@ const Header: React.FC = () => {
               to="/dashboard"
               className="hidden sm:block text-xs sm:text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
             >
-              Dashboard
+              Meus Bombons
             </Link>
           )}
 
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
                       to="/dashboard"
                       className="block px-3 py-2 rounded-lg text-base font-medium hover:bg-muted"
                     >
-                      Dashboard
+                      Meus Bombons
                     </Link>
                   </SheetClose>
                 )}
