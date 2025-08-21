@@ -14,6 +14,7 @@ import {
 import Index from "./pages/Index";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import MobileTabBar from "@/components/MobileTabBar";
 import MinhaConta from "./pages/MinhaConta";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
@@ -164,10 +165,14 @@ useEffect(() => {
 
       <Header />
 
+      {/* App surface */}
+      <div className="min-h-[100dvh] bg-gradient-to-b from-[#f7f5ff] to-white dark:from-[#2e1a58] dark:to-[#1a0f30]">
+
       {isHome && (
         <HomeHeroLightbox open={showLightbox} onClose={() => setShowLightbox(false)} />
       )}
 
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 pt-4 sm:pt-6 md:pt-8">
       <Routes>
         <Route path="/" element={<Index />} />
         <Route
@@ -196,6 +201,11 @@ useEffect(() => {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </div>
+
+        </div> {/* end app surface */}
+
+        <MobileTabBar />
     </div>
   );
 };

@@ -59,7 +59,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-black/5 dark:border-white/10 bg-white/80 dark:bg-[#20123d]/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="mx-auto max-w-6xl px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
         {/* LOGO + link */}
         <div className="flex items-center gap-2 sm:gap-3">
