@@ -136,7 +136,7 @@ const Header: React.FC = () => {
                 className="bg-primary text-primary-foreground dark:bg-darkButton dark:text-darkBg text-xs sm:text-sm px-2 sm:px-3"
               >
                 <span className="hidden xs:inline">Criar conta</span>
-                <span className="xs:hidden">Criar</span>
+                <span className="xs:hidden">Criar conta</span>
               </Button>
             </div>
           ) : (
