@@ -5,6 +5,16 @@ import { useToast } from "@/hooks/use-toast";
 import AuthDialog from "./AuthDialog";
 import useAuth from "@/hooks/useAuth";
 
+// 🔽 novos imports para o menu hamburger
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+
 type AuthMode = "login" | "register";
 
 const THEME_KEY = "theme"; // "dark" | "light"
@@ -22,7 +32,7 @@ const Header: React.FC = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
 
-  // Tema: agora o padrão é "light"
+  // Tema: padrão "light"
   const [theme, setTheme] = useState<"dark" | "light">("light");
 
   useEffect(() => {
@@ -64,6 +74,7 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
+        {/* NAV existente (inalterada) */}
         <nav className="flex items-center gap-1 sm:gap-2 md:gap-3">
           {user && (
             <Link
@@ -92,7 +103,7 @@ const Header: React.FC = () => {
             </Link>
           )}
 
-          {/* Toggle com texto responsivo */}
+          {/* Toggle tema (como estava) */}
           <button
             type="button"
             onClick={toggleTheme}
@@ -107,7 +118,7 @@ const Header: React.FC = () => {
             <span className="hidden sm:inline">{theme === "dark" ? "Claro" : "Escuro"}</span>
           </button>
 
-          {/* Área de autenticação */}
+          {/* Área de autenticação (como estava) */}
           {!user ? (
             <div className="flex items-center gap-1 sm:gap-2">
               <Button
@@ -143,6 +154,107 @@ const Header: React.FC = () => {
               </Button>
             </div>
           )}
+
+          {/* 🔽 NOVO: botão hamburger (apenas mobile) */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="sm:hidden ml-1"
+                aria-label="Abrir menu"
+                title="Abrir menu"
+              >
+                <span className="text-lg leading-none">☰</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+
+              <div className="mt-6 flex flex-col gap-1">
+                {/* Mesmos links da topbar, respeitando as mesmas condições */}
+                {user && (
+                  <SheetClose asChild>
+                    <Link
+                      to="/dashboard"
+                      className="block px-3 py-2 rounded-lg text-base font-medium hover:bg-muted"
+                    >
+                      Dashboard
+                    </Link>
+                  </SheetClose>
+                )}
+
+                {user && (
+                  <SheetClose asChild>
+                    <Link
+                      to="/minha-conta"
+                      className="block px-3 py-2 rounded-lg text-base font-medium hover:bg-muted"
+                    >
+                      Minha Conta
+                    </Link>
+                  </SheetClose>
+                )}
+
+                {user && isAdmin && (
+                  <SheetClose asChild>
+                    <Link
+                      to="/admin"
+                      className="block px-3 py-2 rounded-lg text-base font-medium hover:bg-muted"
+                    >
+                      Admin
+                    </Link>
+                  </SheetClose>
+                )}
+
+                <hr className="my-3" />
+
+                {/* Alternar tema (mesma função) */}
+                <Button
+                  onClick={toggleTheme}
+                  variant="secondary"
+                  className="justify-start"
+                >
+                  Alternar para tema {theme === "dark" ? "claro" : "escuro"}
+                </Button>
+
+                {/* Autenticação no menu (mesmas ações) */}
+                {!user ? (
+                  <>
+                    <SheetClose asChild>
+                      <Button
+                        variant="ghost"
+                        className="justify-start"
+                        onClick={() => handleOpenAuth("login")}
+                      >
+                        Entrar
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button
+                        variant="default"
+                        className="justify-start"
+                        onClick={() => handleOpenAuth("register")}
+                      >
+                        Criar conta
+                      </Button>
+                    </SheetClose>
+                  </>
+                ) : (
+                  <SheetClose asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-start"
+                      onClick={handleSignOut}
+                    >
+                      Sair
+                    </Button>
+                  </SheetClose>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </nav>
       </div>
 
