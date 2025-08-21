@@ -41,7 +41,7 @@ const AuthDialog = ({ open, onOpenChange, mode }: AuthDialogProps) => {
   const getRedirectUrl = () => {
     const env = (import.meta as any).env?.VITE_REDIRECT_URL?.trim();
     if (env) return env;
-    try { return `${window.location.origin}/minha-conta`; } catch { return "https://meubombom.laviepatisserie.com.br/minha-conta"; }
+    try { return `${window.location.origin}/minha-conta`; } catch { return "https://crieseubombom.com.br/minha-conta"; }
   };
   const [isRecover, setIsRecover] = useState(false);
 
