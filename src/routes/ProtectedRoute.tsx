@@ -1,16 +1,24 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({
+  children,
+  requireAdmin = false,
+}: {
+  children: React.ReactNode;
+  requireAdmin?: boolean;
+}) {
+  const { user, isAdmin, loading } = useAuth();
   const location = useLocation();
 
-  // Enquanto o auth inicializa, não redirecione ainda
   if (loading) return null; // ou um spinner
 
-  // Sem usuário? manda para a página de login
   if (!user) {
     return <Navigate to="/minha-conta" replace state={{ from: location }} />;
+  }
+
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
