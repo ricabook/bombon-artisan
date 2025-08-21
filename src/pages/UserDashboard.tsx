@@ -93,9 +93,9 @@ const UserDashboard = () => {
             <p className="text-muted-foreground mb-4">
               Você ainda não criou nenhum bombom personalizado.
             </p>
-            <Button 
+            <Button
               className="w-full sm:w-auto"
-              onClick={() => window.location.href = '/'}
+              onClick={() => navigate("/")}
             >
               Criar Meu Primeiro Bombom
             </Button>
