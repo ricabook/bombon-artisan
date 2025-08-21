@@ -135,12 +135,24 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
 
 const RouterContent: React.FC = () => {
   const location = useLocation();
-  const isHome = location.pathname === "/";
-  const [showLightbox, setShowLightbox] = useState<boolean>(isHome);
+const isHome = location.pathname === "/";
+const [showLightbox, setShowLightbox] = useState<boolean>(false);
 
-  useEffect(() => {
-    setShowLightbox(location.pathname === "/");
-  }, [location.pathname]);
+useEffect(() => {
+  const KEY = "lv_lightbox_shown_session"; // aparece 1x por sessão (aba)
+  if (location.pathname === "/") {
+    const already = sessionStorage.getItem(KEY);
+    if (!already) {
+      setShowLightbox(true);
+      sessionStorage.setItem(KEY, "1");
+    } else {
+      setShowLightbox(false);
+    }
+  } else {
+    setShowLightbox(false);
+  }
+}, [location.pathname]);
+
 
   return (
     // No claro, usamos bg-white; no dark, usamos o token darkBg (definido no tailwind.config.ts)
