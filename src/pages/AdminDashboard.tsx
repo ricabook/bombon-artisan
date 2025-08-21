@@ -219,13 +219,13 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Painel do Administrador</h1>
+    <div className="container mx-auto px-4 sm:px-6 py-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6">Painel do Administrador</h1>
 
       <Tabs defaultValue="pedidos" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
-          <TabsTrigger value="gerenciar">Gerenciar Bombons</TabsTrigger>
+          <TabsTrigger value="gerenciar">Gerenciar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pedidos" className="space-y-4">
@@ -292,6 +292,7 @@ const AdminDashboard = () => {
                           <Button
                             variant="destructive"
                             size="sm"
+                            className="w-full sm:w-auto"
                             onClick={() => handleDelete(bombon.id)}
                             disabled={deletingId === bombon.id}
                             title="Excluir pedido"
@@ -339,33 +340,34 @@ const AdminDashboard = () => {
                           </div>
                         )}
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-sm">
+                          <div className="break-words">
                             <strong>Base:</strong> {bombon.opcoes_base?.nome}
                           </div>
-                          <div>
+                          <div className="break-words">
                             <strong>Ganache:</strong> {bombon.opcoes_ganache?.nome}
                           </div>
-                          <div>
+                          <div className="break-words">
                             <strong>Geleia:</strong>{" "}
                             {bombon.opcoes_geleia?.nome || "Sem geleia"}
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 break-words">
                             <strong>Cor:</strong>
                             <div
-                              className="w-4 h-4 rounded border border-border"
+                              className="w-4 h-4 rounded border border-border flex-shrink-0"
                               style={{
                                 backgroundColor: bombon.opcoes_cor?.codigo_hex,
                               }}
                             />
-                            {bombon.opcoes_cor?.nome}
+                            <span className="truncate">{bombon.opcoes_cor?.nome}</span>
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
                           {bombon.status === "enviado" && (
                             <Button
                               size="sm"
+                              className="w-full sm:w-auto"
                               onClick={() => updateStatus(bombon.id, "em_producao")}
                             >
                               Iniciar Produção
@@ -374,6 +376,7 @@ const AdminDashboard = () => {
                           {bombon.status === "em_producao" && (
                             <Button
                               size="sm"
+                              className="w-full sm:w-auto"
                               onClick={() => updateStatus(bombon.id, "finalizado")}
                             >
                               Finalizar

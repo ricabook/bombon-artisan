@@ -315,35 +315,35 @@ const OptionsManager = () => {
       <div
         ref={setNodeRef}
         style={style}
-        className="flex items-center justify-between p-3 border rounded-lg bg-background"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 border rounded-lg bg-background gap-3"
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded"
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded flex-shrink-0"
           >
             <GripVertical size={16} className="text-muted-foreground" />
           </div>
           {type === 'cores' && option.codigo_hex && (
             <div 
-              className="w-6 h-6 rounded border"
+              className="w-6 h-6 rounded border flex-shrink-0"
               style={{ backgroundColor: option.codigo_hex }}
             />
           )}
-          <div>
-            <span className="font-medium">{option.nome}</span>
+          <div className="min-w-0">
+            <span className="font-medium break-words">{option.nome}</span>
             {type === 'cores' && option.codigo_hex && (
               <span className="text-sm text-muted-foreground ml-2">
                 {option.codigo_hex}
               </span>
             )}
           </div>
-          <Badge variant={option.ativo ? "default" : "secondary"}>
+          <Badge variant={option.ativo ? "default" : "secondary"} className="flex-shrink-0">
             {option.ativo ? "Ativo" : "Inativo"}
           </Badge>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
           <Switch
             checked={option.ativo}
             onCheckedChange={() => handleToggleActive(type, option)}
@@ -352,27 +352,28 @@ const OptionsManager = () => {
             size="sm"
             variant="outline"
             onClick={() => openEditDialog(type, option)}
+            aria-label={`Editar ${option.nome}`}
           >
             <Edit size={14} />
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button size="sm" variant="destructive">
+              <Button size="sm" variant="destructive" aria-label={`Excluir ${option.nome}`}>
                 <Trash2 size={14} />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="sm:max-w-md mx-4">
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
                 <AlertDialogDescription>
                   Tem certeza que deseja excluir "{option.nome}"? Esta ação não pode ser desfeita.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                <AlertDialogCancel className="w-full sm:w-auto">Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => handleDeleteOption(type, option.id)}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 w-full sm:w-auto"
                 >
                   Excluir
                 </AlertDialogAction>
@@ -386,15 +387,16 @@ const OptionsManager = () => {
 
   const OptionCard = ({ type, options: typeOptions, title }: { type: string; options: Option[]; title: string }) => (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
         <Button 
           size="sm" 
           onClick={() => openEditDialog(type)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-full sm:w-auto"
         >
           <Plus size={16} />
-          Adicionar
+          <span className="sm:hidden">Adicionar {title}</span>
+          <span className="hidden sm:inline">Adicionar</span>
         </Button>
       </CardHeader>
       <CardContent>
@@ -436,12 +438,12 @@ const OptionsManager = () => {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="chocolates" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="chocolates">Chocolates</TabsTrigger>
-          <TabsTrigger value="bases">Bases</TabsTrigger>
-          <TabsTrigger value="ganaches">Ganaches</TabsTrigger>
-          <TabsTrigger value="geleias">Geleias</TabsTrigger>
-          <TabsTrigger value="cores">Cores</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto">
+          <TabsTrigger value="chocolates" className="text-xs sm:text-sm p-2">Chocolates</TabsTrigger>
+          <TabsTrigger value="bases" className="text-xs sm:text-sm p-2">Bases</TabsTrigger>
+          <TabsTrigger value="ganaches" className="text-xs sm:text-sm p-2">Ganaches</TabsTrigger>
+          <TabsTrigger value="geleias" className="text-xs sm:text-sm p-2">Geleias</TabsTrigger>
+          <TabsTrigger value="cores" className="text-xs sm:text-sm p-2">Cores</TabsTrigger>
         </TabsList>
 
         <TabsContent value="chocolates">
@@ -466,9 +468,9 @@ const OptionsManager = () => {
       </Tabs>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
               {editingOption.option ? 'Editar' : 'Adicionar'} {editingOption.type.charAt(0).toUpperCase() + editingOption.type.slice(1, -1)}
             </DialogTitle>
           </DialogHeader>
@@ -479,24 +481,26 @@ const OptionsManager = () => {
             handleSaveOption(formData);
           }} className="space-y-4">
             <div>
-              <Label htmlFor="nome">Nome</Label>
+              <Label htmlFor="nome" className="text-sm">Nome</Label>
               <Input
                 id="nome"
                 name="nome"
                 defaultValue={editingOption.option?.nome || ''}
                 required
+                className="mt-1"
               />
             </div>
 
             {editingOption.type === 'cores' && (
               <div>
-                <Label htmlFor="codigo_hex">Código da Cor (Hex)</Label>
+                <Label htmlFor="codigo_hex" className="text-sm">Código da Cor (Hex)</Label>
                 <Input
                   id="codigo_hex"
                   name="codigo_hex"
                   type="color"
                   defaultValue={editingOption.option?.codigo_hex || '#000000'}
                   required
+                  className="mt-1"
                 />
               </div>
             )}
@@ -507,14 +511,22 @@ const OptionsManager = () => {
                 name="ativo"
                 defaultChecked={editingOption.option?.ativo ?? true}
               />
-              <Label htmlFor="ativo">Ativo</Label>
+              <Label htmlFor="ativo" className="text-sm">Ativo</Label>
             </div>
 
-            <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsDialogOpen(false)}
+                className="w-full sm:w-auto"
+              >
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button 
+                type="submit"
+                className="w-full sm:w-auto"
+              >
                 {editingOption.option ? 'Atualizar' : 'Criar'}
               </Button>
             </div>

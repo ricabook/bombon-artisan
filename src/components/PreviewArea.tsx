@@ -200,9 +200,9 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (
-              <div className="text-center text-muted-foreground">
-                <div className="text-6xl mb-2">🍫</div>
-                <p>Sua criação aparecerá aqui</p>
+              <div className="text-center text-muted-foreground p-4">
+                <div className="text-4xl sm:text-6xl mb-2">🍫</div>
+                <p className="text-sm sm:text-base">Sua criação aparecerá aqui</p>
               </div>
             )}
           </div>
@@ -223,19 +223,19 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <div><strong>Chocolate:</strong> {selection.chocolate?.nome || "Não selecionado"}</div>
-            <div><strong>Base:</strong> {selection.base?.nome || "Não selecionado"}</div>
-            <div><strong>Ganache:</strong> {selection.ganache?.nome || "Não selecionado"}</div>
-            <div><strong>Geleia:</strong> {selection.geleia?.nome || "Não selecionado"}</div>
+            <div className="break-words"><strong>Chocolate:</strong> {selection.chocolate?.nome || "Não selecionado"}</div>
+            <div className="break-words"><strong>Base:</strong> {selection.base?.nome || "Não selecionado"}</div>
+            <div className="break-words"><strong>Ganache:</strong> {selection.ganache?.nome || "Não selecionado"}</div>
+            <div className="break-words"><strong>Geleia:</strong> {selection.geleia?.nome || "Não selecionado"}</div>
             <div className="flex items-center gap-2">
               <strong>Cor:</strong> 
               {selection.cor ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <div 
-                    className="w-4 h-4 rounded border border-border"
+                    className="w-4 h-4 rounded border border-border flex-shrink-0"
                     style={{ backgroundColor: selection.cor.codigo_hex }}
                   />
-                  {selection.cor.nome}
+                  <span className="truncate">{selection.cor.nome}</span>
                 </div>
               ) : (
                 "Não selecionado"
@@ -245,7 +245,7 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
           
           <div className="space-y-3 mt-4">
             <Button 
-              className="w-full" 
+              className="w-full text-sm sm:text-base" 
               size="lg"
               variant="cta"
               onClick={handleGenerateImage}
@@ -255,7 +255,7 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
             </Button>
             
             <Button 
-              className="w-full" 
+              className="w-full text-sm sm:text-base" 
               size="lg"
               variant="outline"
               onClick={handleSendToProduction}
@@ -269,9 +269,9 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
 
       {/* Modal para usuários não logados */}
       <Dialog open={showGuestModal} onOpenChange={setShowGuestModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
-            <DialogTitle>Suas informações</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Suas informações</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
@@ -280,40 +280,42 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
             
             <div className="space-y-3">
               <div>
-                <Label htmlFor="guest-nome">Nome completo</Label>
+                <Label htmlFor="guest-nome" className="text-sm">Nome completo</Label>
                 <Input
                   id="guest-nome"
                   type="text"
                   placeholder="Digite seu nome completo"
                   value={guestInfo.nome}
                   onChange={(e) => setGuestInfo(prev => ({ ...prev, nome: e.target.value }))}
+                  className="mt-1"
                 />
               </div>
               
               <div>
-                <Label htmlFor="guest-telefone">WhatsApp</Label>
+                <Label htmlFor="guest-telefone" className="text-sm">WhatsApp</Label>
                 <Input
                   id="guest-telefone"
                   type="tel"
                   placeholder="(00) 00000-0000"
                   value={guestInfo.telefone}
                   onChange={(e) => setGuestInfo(prev => ({ ...prev, telefone: e.target.value }))}
+                  className="mt-1"
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <Button
                 variant="outline"
                 onClick={() => setShowGuestModal(false)}
-                className="flex-1"
+                className="w-full sm:flex-1"
               >
                 Cancelar
               </Button>
               <Button
                 onClick={handleGuestSubmit}
                 disabled={isGenerating}
-                className="flex-1"
+                className="w-full sm:flex-1"
               >
                 {isGenerating ? "Enviando..." : "Enviar Pedido"}
               </Button>

@@ -16,6 +16,9 @@ const config = {
       screens: { "2xl": "1400px" },
     },
     extend: {
+      screens: {
+        'xs': '475px',
+      },
       colors: {
         // Dark mode tokens
         darkBg: "#380e8e",   // <- NOVO fundo do dark mode

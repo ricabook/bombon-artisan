@@ -91,45 +91,44 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
     >
       <div className="absolute inset-0 bg-black/70" onClick={onClose} aria-hidden="true" />
 
-      <div
-        className="relative mx-4 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
-        style={{
-          backgroundImage: "url('/hero-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/55" />
+          <div className="bg-gradient-to-br from-background to-muted rounded-2xl overflow-hidden shadow-2xl mx-4 w-full max-w-4xl"
+            style={{
+              backgroundImage: "url('/hero-bg.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-black/55" />
 
-        <button
-          onClick={onClose}
-          aria-label="Fechar"
-          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
-        >
-          ×
-        </button>
+            <button
+              onClick={onClose}
+              aria-label="Fechar"
+              className="absolute right-3 top-3 z-20 inline-flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
+            >
+              ×
+            </button>
 
-        <div className="relative z-10 p-6 sm:p-10 text-center">
-          <h1 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 leading-tight">
-            Crie seu Bombom by La Vie Pâtisserie
-          </h1>
+            <div className="relative z-10 p-4 sm:p-6 md:p-10 text-center">
+              <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
+                Crie seu Bombom by La Vie Pâtisserie
+              </h1>
 
-          <p className="text-white text-base sm:text-lg md:text-xl leading-relaxed">
-            Seja bem vindo(a) à primeira plataforma online de criação de bombons
-            artesanais. Aqui você escolhe todas as opções do seu bombom, gera
-            uma foto através de Inteligência Artificial e envia para nossa
-            confeitaria começar a produção.
-            <br />
-            <br />
-            A criação de bombons e geração de imagens são gratuitos. Se você
-            decidir enviar para produção, nossa equipe entrará em contato
-            através do seu WhatsApp para concluir o pagamento e dar início ao
-            processo. Se tiver qualquer dúvida, fale conosco por e-mail{" "}
-            <strong>contato@laviepatisserie.com.br</strong> ou por WhatsApp:{" "}
-            <strong>(19) 9-9659-4881</strong>.
-          </p>
-        </div>
-      </div>
+              <p className="text-white text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed px-2">
+                Seja bem vindo(a) à primeira plataforma online de criação de bombons
+                artesanais. Aqui você escolhe todas as opções do seu bombom, gera
+                uma foto através de Inteligência Artificial e envia para nossa
+                confeitaria começar a produção.
+                <br />
+                <br />
+                A criação de bombons e geração de imagens são gratuitos. Se você
+                decidir enviar para produção, nossa equipe entrará em contato
+                através do seu WhatsApp para concluir o pagamento e dar início ao
+                processo. Se tiver qualquer dúvida, fale conosco por e-mail{" "}
+                <strong>contato@laviepatisserie.com.br</strong> ou por WhatsApp:{" "}
+                <strong>(19) 9-9659-4881</strong>.
+              </p>
+            </div>
+          </div>
     </div>
   );
 };

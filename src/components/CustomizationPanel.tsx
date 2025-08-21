@@ -63,7 +63,7 @@ const CustomizationPanel = ({ selection, onSelectionChange }: CustomizationPanel
   ) => (
     <div className="space-y-2">
       <Label className="text-sm font-medium">{label}</Label>
-      <div className="grid grid-cols-6 gap-3">
+      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 sm:gap-3">
         {(cores || []).map((c) => {
           const active = c.id === selected?.id;
           return (
@@ -73,7 +73,7 @@ const CustomizationPanel = ({ selection, onSelectionChange }: CustomizationPanel
               onClick={() => onChange?.(c)}
               title={c.nome}
               className={[
-                "relative h-10 w-10 rounded-full border transition",
+                "relative h-8 w-8 sm:h-10 sm:w-10 rounded-full border transition",
                 active ? "ring-2 ring-offset-2 ring-primary border-primary" : "border-muted-foreground/30"
               ].join(" ")}
               aria-pressed={active}

@@ -17,11 +17,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Coluna de Opções — deve vir primeiro no mobile */}
           <div className="order-1 lg:order-1">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-foreground">
               Crie seu Bombom
             </h2>
             <CustomizationPanel
@@ -32,7 +32,7 @@ const Index = () => {
 
           {/* Coluna de Preview + Resumo — vem depois no mobile */}
           <div className="order-2 lg:order-2">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-foreground">
               Foto e detalhes do Bombom
             </h2>
             <PreviewArea selection={selection} />

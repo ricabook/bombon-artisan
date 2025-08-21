@@ -50,34 +50,25 @@ const Header: React.FC = () => {
 
   return (
     <header className="w-full border-b border-border/30 bg-background/70 dark:bg-darkBg/90 backdrop-blur">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
+      <div className="mx-auto max-w-6xl px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
         {/* LOGO + link */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/" className="flex items-center gap-2">
-            {/* Ajuste o caminho/arquivo conforme o seu /public (png/svg) */}
             <img
               src="/logo.png"
               alt="La Vie Pâtisserie"
-              className="h-20 w-auto"
+              className="h-12 sm:h-16 md:h-20 w-auto"
               loading="eager"
               decoding="async"
             />
-
           </Link>
         </div>
 
-        <nav className="flex items-center gap-3">
-          <Link
-            to="/"
-            className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
-          >
-            
-          </Link>
-
+        <nav className="flex items-center gap-1 sm:gap-2 md:gap-3">
           {user && (
             <Link
               to="/dashboard"
-              className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
+              className="hidden sm:block text-xs sm:text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
             >
               Dashboard
             </Link>
@@ -86,7 +77,7 @@ const Header: React.FC = () => {
           {user && (
             <Link
               to="/minha-conta"
-              className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
+              className="hidden sm:block text-xs sm:text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
             >
               Minha Conta
             </Link>
@@ -95,53 +86,58 @@ const Header: React.FC = () => {
           {user && isAdmin && (
             <Link
               to="/admin"
-              className="text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
+              className="hidden sm:block text-xs sm:text-sm font-medium text-foreground/80 dark:text-white/90 hover:underline"
             >
               Admin
             </Link>
           )}
 
-          {/* Toggle SEM condicional (aparece sempre) */}
+          {/* Toggle com texto responsivo */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="ml-2 inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
+            className="inline-flex items-center gap-1 sm:gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold
                        bg-foreground text-background
                        dark:bg-darkButton dark:text-darkBg
                        hover:brightness-95 transition"
             aria-label="Alternar tema"
             title="Alternar tema"
           >
-            {theme === "dark" ? "☀️ Tema Claro" : "🌙 Tema Escuro"}
+            <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+            <span className="hidden sm:inline">{theme === "dark" ? "Claro" : "Escuro"}</span>
           </button>
 
           {/* Área de autenticação */}
           {!user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => handleOpenAuth("login")}
-                className="text-foreground dark:text-white"
+                className="text-foreground dark:text-white text-xs sm:text-sm px-2 sm:px-3"
               >
                 Entrar
               </Button>
               <Button
                 variant="default"
+                size="sm"
                 onClick={() => handleOpenAuth("register")}
-                className="bg-primary text-primary-foreground dark:bg-darkButton dark:text-darkBg"
+                className="bg-primary text-primary-foreground dark:bg-darkButton dark:text-darkBg text-xs sm:text-sm px-2 sm:px-3"
               >
-                Criar conta
+                <span className="hidden xs:inline">Criar conta</span>
+                <span className="xs:hidden">Criar</span>
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-foreground/80 dark:text-white/80">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="hidden md:block text-xs sm:text-sm text-foreground/80 dark:text-white/80 max-w-24 sm:max-w-none truncate">
                 Olá, {user?.user_metadata?.nome || user?.email || "usuário"}
               </span>
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={handleSignOut}
-                className="text-foreground dark:text-white"
+                className="text-foreground dark:text-white text-xs sm:text-sm px-2 sm:px-3"
               >
                 Sair
               </Button>

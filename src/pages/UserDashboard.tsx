@@ -84,17 +84,17 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Meus Bombons</h1>
+    <div className="container mx-auto px-4 sm:px-6 py-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6">Meus Bombons</h1>
       
       {bombons.length === 0 ? (
         <Card>
           <CardContent className="p-6 text-center">
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               Você ainda não criou nenhum bombom personalizado.
             </p>
             <Button 
-              className="mt-4"
+              className="w-full sm:w-auto"
               onClick={() => window.location.href = '/'}
             >
               Criar Meu Primeiro Bombom
@@ -106,8 +106,8 @@ const UserDashboard = () => {
           {bombons.map((bombon) => (
             <Card key={bombon.id}>
               <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                  <CardTitle className="text-base sm:text-lg">
                     Bombom de {bombon.opcoes_chocolate?.nome}
                   </CardTitle>
                   <Badge className={getStatusColor(bombon.status)}>
@@ -117,23 +117,23 @@ const UserDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-sm">
+                    <div className="break-words">
                       <strong>Base:</strong> {bombon.opcoes_base?.nome}
                     </div>
-                    <div>
+                    <div className="break-words">
                       <strong>Ganache:</strong> {bombon.opcoes_ganache?.nome}
                     </div>
-                    <div>
+                    <div className="break-words">
                       <strong>Geleia:</strong> {bombon.opcoes_geleia?.nome || "Sem geleia"}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 break-words">
                       <strong>Cor:</strong>
                       <div 
-                        className="w-4 h-4 rounded border border-border"
+                        className="w-4 h-4 rounded border border-border flex-shrink-0"
                         style={{ backgroundColor: bombon.opcoes_cor?.codigo_hex }}
                       />
-                      {bombon.opcoes_cor?.nome}
+                      <span className="truncate">{bombon.opcoes_cor?.nome}</span>
                     </div>
                   </div>
                   <div className="text-xs text-muted-foreground">
