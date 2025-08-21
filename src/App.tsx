@@ -41,7 +41,6 @@ function ensureDefaultLightTheme() {
   }
 }
 
-/** Guard de rotas protegidas */
 const ProtectedRoute = ({
   children,
   requireAdmin = false,
@@ -50,28 +49,10 @@ const ProtectedRoute = ({
   requireAdmin?: boolean;
 }) => {
   const { user, isAdmin, loading } = useAuth();
-  const location = useLocation();
 
-  // Enquanto autenticação inicializa, não redireciona
   if (loading) return null;
-
-  // Sem usuário -> vai para login, preservando origem
-  if (!user) return <Navigate to="/minha-conta" replace state={{ from: location }} />;
-
-  // Precisa ser admin e não é? envia para home (ou escolha outra rota)
+  if (!user) return <Navigate to="/" replace />;
   if (requireAdmin && !isAdmin) return <Navigate to="/" replace />;
-
-  return <>{children}</>;
-};
-
-/** Guard de páginas só para convidados (ex.: login/cadastro) */
-const GuestRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) return null;
-
-  // Já logado? manda para dashboard (ou onde preferir)
-  if (user) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
 };
@@ -110,45 +91,44 @@ const HomeHeroLightbox: React.FC<{ open: boolean; onClose: () => void }> = ({
     >
       <div className="absolute inset-0 bg-black/70" onClick={onClose} aria-hidden="true" />
 
-      <div
-        className="bg-gradient-to-br from-background to-muted rounded-2xl overflow-hidden shadow-2xl mx-4 w-full max-w-4xl"
-        style={{
-          backgroundImage: "url('/hero-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/55" />
+          <div className="bg-gradient-to-br from-background to-muted rounded-2xl overflow-hidden shadow-2xl mx-4 w-full max-w-4xl"
+            style={{
+              backgroundImage: "url('/hero-bg.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-black/55" />
 
-        <button
-          onClick={onClose}
-          aria-label="Fechar"
-          className="absolute right-3 top-3 z-20 inline-flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
-        >
-          ×
-        </button>
+            <button
+              onClick={onClose}
+              aria-label="Fechar"
+              className="absolute right-3 top-3 z-20 inline-flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
+            >
+              ×
+            </button>
 
-        <div className="relative z-10 p-4 sm:p-6 md:p-10 text-center">
-          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
-            Crie seu Bombom by La Vie Pâtisserie
-          </h1>
+            <div className="relative z-10 p-4 sm:p-6 md:p-10 text-center">
+              <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
+                Crie seu Bombom by La Vie Pâtisserie
+              </h1>
 
-          <p className="text-white text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed px-2">
-            Seja bem vindo(a) à primeira plataforma online de criação de bombons
-            artesanais. Aqui você escolhe todas as opções do seu bombom, gera
-            uma foto através de Inteligência Artificial e envia para nossa
-            confeitaria começar a produção.
-            <br />
-            <br />
-            A criação de bombons e geração de imagens são gratuitos. Se você
-            decidir enviar para produção, nossa equipe entrará em contato
-            através do seu WhatsApp para concluir o pagamento e dar início ao
-            processo. Se tiver qualquer dúvida, fale conosco por e-mail{" "}
-            <strong>contato@laviepatisserie.com.br</strong> ou por WhatsApp:{" "}
-            <strong>(19) 9-9659-4881</strong>.
-          </p>
-        </div>
-      </div>
+              <p className="text-white text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed px-2">
+                Seja bem vindo(a) à primeira plataforma online de criação de bombons
+                artesanais. Aqui você escolhe todas as opções do seu bombom, gera
+                uma foto através de Inteligência Artificial e envia para nossa
+                confeitaria começar a produção.
+                <br />
+                <br />
+                A criação de bombons e geração de imagens são gratuitos. Se você
+                decidir enviar para produção, nossa equipe entrará em contato
+                através do seu WhatsApp para concluir o pagamento e dar início ao
+                processo. Se tiver qualquer dúvida, fale conosco por e-mail{" "}
+                <strong>contato@laviepatisserie.com.br</strong> ou por WhatsApp:{" "}
+                <strong>(19) 9-9659-4881</strong>.
+              </p>
+            </div>
+          </div>
     </div>
   );
 };
@@ -178,18 +158,6 @@ const RouterContent: React.FC = () => {
 
       <Routes>
         <Route path="/" element={<Index />} />
-
-        {/* Rota de login/cadastro — somente para convidados */}
-        <Route
-          path="/minha-conta"
-          element={
-            <GuestRoute>
-              <MinhaConta />
-            </GuestRoute>
-          }
-        />
-
-        {/* Áreas protegidas */}
         <Route
           path="/dashboard"
           element={
@@ -206,7 +174,14 @@ const RouterContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/minha-conta"
+          element={
+            <ProtectedRoute>
+              <MinhaConta />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
