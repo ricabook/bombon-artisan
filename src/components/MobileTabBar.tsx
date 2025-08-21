@@ -12,7 +12,7 @@ type Tab = {
 
 const tabs: Tab[] = [
   { to: "/", label: "Início", icon: <Home className="h-5 w-5" />, match: p => p === "/" },
-  { to: "/dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
+  { to: "/dashboard", label: "Bombons", icon: <LayoutDashboard className="h-5 w-5" /> },
   { to: "/minha-conta", label: "Conta", icon: <User className="h-5 w-5" /> },
 ];
 
