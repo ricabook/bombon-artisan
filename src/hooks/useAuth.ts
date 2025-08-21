@@ -1,16 +1,21 @@
-import { useState, useEffect } from "react";
-import { User, Session } from '@supabase/supabase-js';
+import { useEffect, useState, useMemo } from "react";
+import type { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
-  signUp: (nome: string, telefone: string, email: string, password: string) => Promise<{ error: any }>;
+  signUp: (
+    nome: string,
+    telefone: string,
+    email: string,
+    password: string
+  ) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-}
+};
 
 const useAuth = (): AuthContextType => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,103 +23,96 @@ const useAuth = (): AuthContextType => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Deriva admin do user_metadata.role (ajuste se você usar profiles/claims no JWT)
+  const computeIsAdmin = (u: User | null) => {
+    const role =
+      (u?.user_metadata?.role as string | undefined) ??
+      (u?.app_metadata?.role as string | undefined);
+    return role === "admin";
+  };
+
   useEffect(() => {
-    const checkUserRole = async (userId: string) => {
+    let mounted = true;
+
+    const bootstrap = async () => {
       try {
-        console.log('Checking user role for userId:', userId);
-        const { data: roles, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userId)
-          .eq('role', 'admin');
-        
-        console.log('User roles query result:', { roles, error });
-        const isUserAdmin = roles && roles.length > 0;
-        console.log('Setting isAdmin to:', isUserAdmin);
-        setIsAdmin(isUserAdmin);
-        setLoading(false); // Only set loading to false after role check
-      } catch (error) {
-        console.error('Error checking user role:', error);
-        setIsAdmin(false);
-        setLoading(false);
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setSession(data.session ?? null);
+        setUser(data.session?.user ?? null);
+        setIsAdmin(computeIsAdmin(data.session?.user ?? null));
+      } finally {
+        if (mounted) setLoading(false);
       }
     };
 
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Keep loading true until role check completes
-          setLoading(true);
-          setTimeout(() => {
-            checkUserRole(session.user.id);
-          }, 0);
-        } else {
-          setIsAdmin(false);
-          setLoading(false);
-        }
-      }
-    );
+    bootstrap();
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        setLoading(true); // Keep loading until role check
-        checkUserRole(session.user.id);
-      } else {
-        setLoading(false);
-      }
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
+      if (!mounted) return;
+      setSession(sess ?? null);
+      setUser(sess?.user ?? null);
+      setIsAdmin(computeIsAdmin(sess?.user ?? null));
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
-  const signUp = async (nome: string, telefone: string, email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
+  const signUp = async (
+    nome: string,
+    telefone: string,
+    email: string,
+    password: string
+  ) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          nome,
-          telefone
-        }
-      }
+      options: { data: { nome, telefone } },
     });
-    
     return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-    
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    // 1) Desloga no Supabase
+    const { error } = await supabase.auth.signOut();
+    // 2) Limpa imediatamente o estado da UI (independente do listener)
+    setUser(null);
+    setSession(null);
+    setIsAdmin(false);
+
+    // 3) (Opcional, defensivo) limpa chaves locais se você mudou a storageKey do client
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith("sb-") || k.includes("supabase"))
+        .forEach((k) => localStorage.removeItem(k));
+    } catch {}
+
+    if (error) {
+      // Propaga erro para o caller tratar (toast, etc.)
+      throw error;
+    }
   };
 
-  return {
-    user,
-    session,
-    loading,
-    isAdmin,
-    signUp,
-    signIn,
-    signOut
-  };
+  return useMemo(
+    () => ({
+      user,
+      session,
+      loading,
+      isAdmin,
+      signUp,
+      signIn,
+      signOut,
+    }),
+    [user, session, loading, isAdmin]
+  );
 };
 
 export default useAuth;
