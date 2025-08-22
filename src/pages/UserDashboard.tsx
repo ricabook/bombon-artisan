@@ -138,10 +138,6 @@ const UserDashboard = () => {
                   <div className="text-xs text-muted-foreground">
                     Criado em: {new Date(bombon.created_at).toLocaleDateString('pt-BR')}
                   </div>
-                                            <div>
-                            Prazo para produção:{" "}
-                            {addDays(new Date(bombon.created_at), 7).toLocaleDateString("pt-BR")}
-                          </div>
                 </div>
               </CardContent>
             </Card>
