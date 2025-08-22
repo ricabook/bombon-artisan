@@ -135,18 +135,14 @@ const UserDashboard = () => {
                       <span className="truncate">{bombon.opcoes_cor?.nome}</span>
                     </div>
                   </div>
-
-                        <div className="text-xs text-muted-foreground space-y-1">
-                          <div>
-                            Criado em:{" "}
-                            {new Date(bombon.created_at).toLocaleDateString("pt-BR")}
-                          </div>
-                          <div>
+                  <div className="text-xs text-muted-foreground">
+                    Criado em: {new Date(bombon.created_at).toLocaleDateString('pt-BR')}
+                  </div>
+                                            <div>
                             Prazo para produção:{" "}
                             {addDays(new Date(bombon.created_at), 7).toLocaleDateString("pt-BR")}
                           </div>
-                        </div>
-                      </div>
+                </div>
               </CardContent>
             </Card>
           ))}
