@@ -135,6 +135,7 @@ const UserDashboard = () => {
                       <span className="truncate">{bombon.opcoes_cor?.nome}</span>
                     </div>
                   </div>
+
                         <div className="text-xs text-muted-foreground space-y-1">
                           <div>
                             Criado em:{" "}
