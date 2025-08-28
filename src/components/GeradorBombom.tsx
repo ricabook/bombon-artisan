@@ -25,7 +25,7 @@ export default function GeradorBombom({ selecao, aspectRatio = '1:1', outputForm
         disabled={loading}
         className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50"
       >
-        {loading ? 'Gerando…' : 'Gerar imagem do bombom'}
+        {loading ? 'Gerando imagem do bombom…' : 'Gerar imagem do bombom'}
       </button>
 
       {error && <p className="text-red-600 text-sm">{error}</p>}

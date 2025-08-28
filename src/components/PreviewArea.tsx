@@ -251,7 +251,7 @@ Iluminação suave de estúdio, fundo neutro acinzentado, foco nítido e textura
               onClick={handleGenerateImage}
               disabled={isGeneratingImage || !selection.chocolate || !selection.base || !selection.ganache || !selection.cor}
             >
-              {isGeneratingImage ? "Gerando..." : "Gerar Imagem do Bombom"}
+              {isGeneratingImage ? "Gerando imagem do bombom..." : "Gerar Imagem do Bombom"}
             </Button>
             
             <Button 
